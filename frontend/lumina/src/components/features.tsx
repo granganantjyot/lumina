@@ -1,6 +1,12 @@
 import * as React from "react"
 
 import { Card, CardContent } from "@/components/ui/card"
+import clsx from "clsx";
+
+
+interface FeaturesComponentProps {
+    className?: string;
+}
 
 
 const features = [
@@ -11,11 +17,15 @@ const features = [
 
 ]
 
-export default function FeaturesComponent() {
+export default function FeaturesComponent({ className }: FeaturesComponentProps) {
     return (
-        <div className="flex flex-wrap gap-6 w-full px-10 justify-center mt-5">
+        <div className={clsx("flex flex-wrap gap-6 w-full justify-center", className)}>
+            
+
+
             {features.map((f, index) => (
                 <Card key={index} className="flex-1 min-w-[200px] max-w-[1/5] shadow-lg">
+                    
                     
                     <CardContent className="flex flex-col aspect-square items-center justify-center p-6 text-center ">
                         <img src={"/file.svg"} className="aspect-square w-10 mb-5" alt="React Logo" />

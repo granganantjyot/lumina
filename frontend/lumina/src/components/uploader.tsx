@@ -1,13 +1,18 @@
 "use client";
 import Dropzone, { DropzoneState } from 'shadcn-dropzone';
 import { toast, useToast } from "@/hooks/use-toast"
+import clsx from "clsx";
 
 
-export default function UploadComponent() {
+interface UploadComponentProps {
+    className?: string;
+}
+
+export default function UploadComponent({ className }: UploadComponentProps) {
     return (
         <Dropzone
             dropZoneClassName="flex justify-center items-center w-full h-full bg-white border-dashed border-[1.5px] border-[#31454e] rounded-lg hover:bg-slate-400 hover:text-white hover:border-transparent transition-all select-none cursor-pointer"
-            containerClassName="w-1/3 h-48 mt-5 mr-10"
+            containerClassName={clsx("w-4/5 min-h-56", className)}
             onDrop={(acceptedFiles: File[]) => {
                 console.log(acceptedFiles)
             }}
