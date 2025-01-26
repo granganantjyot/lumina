@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+  <!-- Define the Gradient -->
+  <defs>
+    <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4cacaf" />
+      <stop offset="40%" stop-color="#e96443" />
+      <stop offset="70%" stop-color="#c94b4b" />
+      <stop offset="100%" stop-color="#31454e" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Apply the Gradient to the Path -->
+  <path fill="url(#waveGradient)" d="M0,160L120,149.3C240,139,480,117,720,122.7C960,128,1200,160,1320,176L1440,192L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path>
+</svg>
