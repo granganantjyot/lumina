@@ -12,7 +12,7 @@ export default function UploadComponent({ className }: UploadComponentProps) {
     return (
         <Dropzone
             dropZoneClassName="flex justify-center items-center w-full h-full bg-white border-dashed border-[1.5px] border-[#31454e] rounded-lg hover:bg-slate-400 hover:text-white hover:border-transparent transition-all select-none cursor-pointer"
-            containerClassName={clsx("w-4/5 min-h-56", className)}
+            containerClassName={clsx("w-3/5 min-h-56", className)}
             onDrop={(acceptedFiles: File[]) => {
                 console.log(acceptedFiles)
             }}
