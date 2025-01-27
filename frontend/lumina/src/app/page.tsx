@@ -1,7 +1,16 @@
 import FeaturesComponent from "@/components/features";
 import UploadComponent from "@/components/uploader";
+import { Button } from "@/components/ui/button";
 import { MeshGradient } from "@blur-ui/mesh-gradient";
 import Image from "next/image";
+import { JSX, SVGProps } from "react";
+import { ImagePlay, Cog, Flame } from "lucide-react"
+
+
+
+const bestResultsTips = ["Place photos on a plain, neutral-colored surface",
+  "Lay photos completely flat and do not overlap or obstruct", "Position camera directly above photos",
+  "Ensure even, natural lighting conditions", "Capture 2-4 photos in one batch for higher quality output"]
 
 export default function Home() {
   return (
@@ -28,60 +37,69 @@ export default function Home() {
 
             <div className="w-full flex flex-col items-center p-8">
               <h2 className="text-4xl font-semibold text-center">Features</h2>
-              <FeaturesComponent />
+              <FeaturesComponent className="mt-5 px-10 " />
             </div>
 
           </div>
         </section>
-
-
-
-
-
-
 
 
         {/* Try It Out */}
-
         <section id="try-it-out" className="-mt-0.5">
-
           <div
             className="relative w-screen bg-cover bg-no-repeat bg-center"
-            style={{ backgroundImage: "url('/untitled2.svg')" }}>
+            style={{ backgroundImage: "url('/untitled4.svg')" }}>
 
-            <div className="w-full flex flex-col items-end p-8 pt-16">
-              <h2 className="text-4xl font-semibold text-right text-white mr-10">Try It Out</h2>
-              <p className="text-lg w-full text-white text-right drop-shadow-lg mr-10">Upload an image and see the magic</p>
+            <div className="ml-10 mr-10 p-8 pt-16">
+              <h2 className="text-4xl font-semibold  text-white">Try It Out</h2>
+              <p className="text-lg w-full text-white  drop-shadow-lg">Upload an image and see the magic</p>
 
-              <UploadComponent/>
+              <div className="flex flex-row mt-5 gap-10 flex-grow justify-between w-full">
+                <UploadComponent />
 
-              
+                <div className="flex flex-1 flex-col ">
+                  <h3 className="text-2xl font-semibold text-white">For Best Results:</h3>
+                  <ul className="space-y-1 mt-1">
 
+                    {bestResultsTips.map((tip, index) => (
 
-              {/* {Array.from({ length: 1 }, (_, index) => index + 1).map((num) => (
-                <Card key={num} className="flex-1 w-1/2 h-1/5 shadow-lg">
-                  <CardContent className="flex flex-col aspect-square items-center justify-center p-6 text-center ">
-                        <img src={"/file.svg"} className="aspect-square w-10 mb-5" alt="React Logo" />
+                      <li className="flex items-center" key={index}>
 
-                        
-                    </CardContent>
-                </Card>
-              ))} */}
+                        <Image src={"/check.svg"} height={20} width={20} alt="check" className="text-white mr-1"></Image>
+
+                        <div>
+                          <p className="font-medium text-base text-white">{tip}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+
+                </div>
+              </div>
+
+              <div className="flex flex-row gap-2 mt-2 ">
+                <Button >
+                  <ImagePlay />Start
+                </Button>
+
+                <Button >
+                  <Cog />Options
+                </Button>
+
+                <Button className="">
+                  <Flame />Blaze
+                </Button>
+
+              </div>
+
             </div>
-
           </div>
-
-
-
         </section>
 
 
 
 
-        <section>
-          <h2 className="text-2xl font-semibold text-right text-black mr-10">For Best Results</h2>
 
-        </section>
 
 
 
