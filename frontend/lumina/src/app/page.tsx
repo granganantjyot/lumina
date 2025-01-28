@@ -5,6 +5,8 @@ import { MeshGradient } from "@blur-ui/mesh-gradient";
 import Image from "next/image";
 import { JSX, SVGProps } from "react";
 import { ImagePlay, Cog, Flame } from "lucide-react"
+import TryItOutComponent from "@/components/try-it-out";
+import NavBar from "@/components/navbar";
 
 
 
@@ -15,6 +17,7 @@ const bestResultsTips = ["Place photos on a plain, neutral-colored surface",
 export default function Home() {
   return (
     <div className=" font-[family-name:var(--font-geist-sans)]">
+      <NavBar></NavBar>
 
       <main className="flex flex-col row-start-2 items-center sm:items-start">
 
@@ -50,49 +53,9 @@ export default function Home() {
             className="relative w-screen bg-cover bg-no-repeat bg-center"
             style={{ backgroundImage: "url('/untitled4.svg')" }}>
 
-            <div className="ml-10 mr-10 p-8 pt-16">
-              <h2 className="text-4xl font-semibold  text-white">Try It Out</h2>
-              <p className="text-lg w-full text-white  drop-shadow-lg">Upload an image and see the magic</p>
+            
 
-              <div className="flex flex-row mt-5 gap-10 flex-grow justify-between w-full">
-                <UploadComponent />
-
-                <div className="flex flex-1 flex-col ">
-                  <h3 className="text-2xl font-semibold text-white">For Best Results:</h3>
-                  <ul className="space-y-1 mt-1">
-
-                    {bestResultsTips.map((tip, index) => (
-
-                      <li className="flex items-center" key={index}>
-
-                        <Image src={"/check.svg"} height={20} width={20} alt="check" className="text-white mr-1"></Image>
-
-                        <div>
-                          <p className="font-medium text-base text-white">{tip}</p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-
-                </div>
-              </div>
-
-              <div className="flex flex-row gap-2 mt-2 ">
-                <Button >
-                  <ImagePlay />Start
-                </Button>
-
-                <Button >
-                  <Cog />Options
-                </Button>
-
-                <Button className="">
-                  <Flame />Blaze
-                </Button>
-
-              </div>
-
-            </div>
+            <TryItOutComponent></TryItOutComponent>
           </div>
         </section>
 
