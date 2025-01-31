@@ -33,13 +33,11 @@ export default function TryItOutComponent() {
 
         // Else store files in image store
         else {
-            toast({ title: "Uploading", action: <Button><Loader2 className="animate-spin">Loading</Loader2></Button>});
-
             setImageCount(files.length);
             setImageFiles(files);
             setSessionId(uuidv4());
             
-            router.push("/extraction")
+            router.push("/crop")
         }
     }
 
