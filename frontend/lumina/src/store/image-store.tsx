@@ -1,3 +1,4 @@
+import { ImageFrame } from '@/components/photo-crop'
 import { create } from 'zustand'
 
 
@@ -10,7 +11,14 @@ interface ImageState{
 
     sessionId? : string | null,
     setSessionId : (id : string) => void
-}
+
+    parentImgToFrames : {[parentImgID: string] : ImageFrame[]} // Maps parent image ids to the list of corresponding image frames that need to be cropped out
+    setParentImgToFrames : (mappings : {[parentImgID: string] : ImageFrame[]} ) => void;
+
+    updateImageFrame : (parent_img_id : string, index : number, newFrame : ImageFrame) => void;
+}   
+
+
 
 const useStore = create<ImageState>((set) => ({
     imageCount : 0,
@@ -21,7 +29,19 @@ const useStore = create<ImageState>((set) => ({
     setImageFiles : (files : File[]) => set((state) => ({imageFiles : files})),
     
     sessionId : null,
-    setSessionId : (id : string) => set((state) => ({sessionId : id}))
+    setSessionId : (id : string) => set((state) => ({sessionId : id})),
+
+
+    parentImgToFrames : {},
+    setParentImgToFrames: (mappings : {[parentImgID: string] : ImageFrame[]}) => set((state) => ({parentImgToFrames : mappings})),
+
+    updateImageFrame: (parent_img_id : string, index : number, newFrame : ImageFrame) => set((state) => {
+
+        const updatedFrames = {...state.parentImgToFrames};
+        updatedFrames[parent_img_id][index] = newFrame;
+
+        return {parentImgToFrames : updatedFrames}
+    })
 
   }))
 
