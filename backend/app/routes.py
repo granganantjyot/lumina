@@ -15,7 +15,7 @@ async def upload(files: list[UploadFile], session_id: Annotated[str, Form()],):
 
         img_code = session_id + "_" + str(count) # use this image code to store the actual image in session storage
 
-        result.append({"parentImg" : img_code, "imageFrames" : images_corners})
+        result.append({"parentImgID" : img_code, "imageFrames" : images_corners})
 
         count += 1
     
