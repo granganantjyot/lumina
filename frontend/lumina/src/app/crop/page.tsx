@@ -8,21 +8,23 @@ import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import PhotoCropComponent from "@/components/photo-crop";
 import { ImageFrame } from "@/components/photo-crop";
+import { Check } from "lucide-react";
 
 
-interface ExtractedImage {
-    parentImg: string,
+// Refers to the set of images (cropped photos) that have been detected from a given parent image
+interface DetectedImageSet {
+    parentImgID: string,
     imageFrames: ImageFrame[]
 }
 
 export default function Crop() {
 
     const router = useRouter();
-    const { imageCount, imageFiles, sessionId } = useStore();
+    const { imageFiles, sessionId, parentImgToFrames, setParentImgToFrames } = useStore();
 
     const [loading, setLoading] = useState<boolean>(true);
 
-    const [extractedImages, setExtractedImages] = useState<ExtractedImage[]>();
+    const [detectedImageSets, setDetectedImageSets] = useState<DetectedImageSet[]>();
 
     const hasRun = useRef<boolean>(false);
 
@@ -42,7 +44,10 @@ export default function Crop() {
 
                     const response = await axios.post("http://127.0.0.1:8000/api/upload", formData, { headers: { "Content-Type": "multipart/form-data" } });
                     console.log(response.data)
-                    setExtractedImages(response.data.processedResult);
+
+
+                    populateImageStore(response.data.processedResult);
+                    setDetectedImageSets(response.data.processedResult);
                     setLoading(false);
 
                 } catch (error) {
@@ -69,7 +74,7 @@ export default function Crop() {
 
 
                 {/* Title + Page Name */}
-                <div className="">
+                <div>
                     <h2 className="font-medium text-xl text-[#4cacaf]">Lumina</h2>
                     <h1 className="text-4xl font-semibold text-start mt-2">Image Cropping</h1>
                     <p className="text-base">Adjust corners of each detected image</p>
@@ -95,51 +100,59 @@ export default function Crop() {
 
                         <div className="w-full">
 
-                            {extractedImages?.map((image, index) => {
-                                return <PhotoCropComponent parentImage={imageFiles[index]} imageFrames={image.imageFrames} key={index}/>
+                            <div className="flex justify-between items-center">
+                                <p className="font-semibold">{detectedImageSets?.length} {detectedImageSets?.length === 1 ? "File" : "Files"} Uploaded</p>
+
+                                <Button className="bg-[#4cacaf] p-4 text-base" onClick={handleConfirmation}>
+                                    Confirm <Check />
+                                </Button>
+
+                            </div>
+
+                            {detectedImageSets?.map((image, index) => {
+                                return <PhotoCropComponent parentImageFile={imageFiles[index]} parentImageID={image.parentImgID} imageFrames={image.imageFrames} key={index} />
                             })}
 
-                            
-                            
+
+
                         </div>
-                        
 
-
-                        
                     }
 
                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             </main>
 
 
         </div>
     );
+
+    // Takes the API response and populates the Zustand Image Store using it
+    function populateImageStore(imageSets: DetectedImageSet[]) {
+
+        const parentImgToFrames: { [parentImgID: string]: ImageFrame[] } = {}
+
+
+
+        // Ensure that the Image Store holds independent objects instead of referencing imageSets
+        // Create deep copy of every imageFrames to prevent unintended mutations
+        imageSets.forEach((imageSet: DetectedImageSet) => {
+            parentImgToFrames[imageSet.parentImgID] = imageSet.imageFrames.map((frame) => ({
+                tl: [...frame.tl],
+                tr: [...frame.tr],
+                br: [...frame.br],
+                bl: [...frame.bl],
+            }));
+        });
+
+        setParentImgToFrames(parentImgToFrames);
+        console.log("Image Store Populated")
+        console.log(parentImgToFrames)
+    }
+
+    function handleConfirmation() {
+        console.log(parentImgToFrames)
+    }
 }
 
 
