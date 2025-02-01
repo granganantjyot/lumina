@@ -7,12 +7,13 @@ const FRAME_COLORS = ["#4cacaf", "#5233b8", "#89c91a", "#c94b4b"];
 
 interface ImageFrameEditorType {
     imageFrame: ImageFrame,
-    index: number,
+    frameNumber: number,
     onDrag: Function,
+    onDragFinished: Function,
     stageSize : {width : number, height : number} // [width, height]
 }
 
-export default function ImageFrameEditor({ imageFrame, index, onDrag, stageSize }: ImageFrameEditorType) {
+export default function ImageFrameEditor({ imageFrame, frameNumber, onDrag, onDragFinished, stageSize }: ImageFrameEditorType) {
 
     function handleDragMovement(event: KonvaEventObject<DragEvent>, corner: keyof ImageFrame) {
 
@@ -46,11 +47,12 @@ export default function ImageFrameEditor({ imageFrame, index, onDrag, stageSize 
                             x={imageFrame[key][0]}
                             y={imageFrame[key][1]}
                             radius={7}
-                            fill={FRAME_COLORS.at(index % 4)}
+                            fill={FRAME_COLORS.at(frameNumber % 4)}
                             opacity={0.6}
                             dragDistance={1}
                             draggable
                             onDragMove={(event) => handleDragMovement(event, key)}
+                            onDragEnd={(event) => {onDragFinished()}}
                         />
                     )
                 })
@@ -64,9 +66,9 @@ export default function ImageFrameEditor({ imageFrame, index, onDrag, stageSize 
                     imageFrame.tr[0], imageFrame.tr[1], 
                     imageFrame.br[0], imageFrame.br[1], 
                     imageFrame.bl[0], imageFrame.bl[1]]}
-                fill={FRAME_COLORS.at(index % 4)}
+                fill={FRAME_COLORS.at(frameNumber % 4)}
                 opacity={0.5}
-                stroke={FRAME_COLORS.at(index % 4)}
+                stroke={FRAME_COLORS.at(frameNumber % 4)}
                 strokeWidth={2}
                 closed={true}
                 listening={false}
