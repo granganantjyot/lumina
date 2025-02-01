@@ -8,6 +8,7 @@ import Konva from "konva";
 import ImageFrameEditor from "./ImageFrameEditor";
 import { Button } from "./ui/button";
 import { ImagePlus, RotateCcw } from "lucide-react";
+import useStore from "@/store/image-store";
 
 
 export interface ImageFrame { // contains all 4 corners of the extracted image
@@ -18,23 +19,27 @@ export interface ImageFrame { // contains all 4 corners of the extracted image
 }
 
 interface PhotoCropComponentType {
-    parentImage: File,
+    parentImageFile: File,
+    parentImageID: string,
     imageFrames: ImageFrame[]
 }
 
 
 
 
-export default function PhotoCropComponent({ parentImage, imageFrames }: PhotoCropComponentType) {
+export default function PhotoCropComponent({ parentImageFile, parentImageID, imageFrames }: PhotoCropComponentType) {
 
     const [konvasImage, setKonvasImage] = useState<HTMLImageElement | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
     const [scaledFrames, setScaledFrames] = useState<ImageFrame[]>([]);
 
+
     const containerRef = useRef<HTMLDivElement>(null);
 
     const hasRun = useRef<boolean>(false);
+
+    const updateImageFrame = useStore((state) => state.updateImageFrame);
 
 
     // Handle initial image load
@@ -43,7 +48,7 @@ export default function PhotoCropComponent({ parentImage, imageFrames }: PhotoCr
         hasRun.current = true;
 
         console.log("useeffect")
-        const url = URL.createObjectURL(parentImage);
+        const url = URL.createObjectURL(parentImageFile);
         setImageUrl(url);
 
 
@@ -75,14 +80,17 @@ export default function PhotoCropComponent({ parentImage, imageFrames }: PhotoCr
 
             const updatedFrames: ImageFrame[] = []
 
+            console.log("INITIAL IMAGEFRAMES")
+            console.log(imageFrames);
+
+            // This will modify imageFrames as well, to store the original scaled frames (this will be useful when resetting the frames since the values from imageFrames can be reused)
             imageFrames.forEach((frame: ImageFrame) => {
-                const tempFrame = frame;
+                const tempFrame = frame; 
 
                 for (const corner of Object.keys(tempFrame) as (keyof ImageFrame)[]) {
                     tempFrame[corner] = [tempFrame[corner][0] * xScale, tempFrame[corner][1] * yScale]
                 }
 
-                console.log(tempFrame)
                 updatedFrames.push(tempFrame)
             });
 
@@ -96,7 +104,7 @@ export default function PhotoCropComponent({ parentImage, imageFrames }: PhotoCr
             URL.revokeObjectURL(imageUrl ?? "");
         };
 
-    }, [parentImage])
+    }, [parentImageFile])
 
 
 
@@ -117,7 +125,22 @@ export default function PhotoCropComponent({ parentImage, imageFrames }: PhotoCr
     }
 
     function handleResetFrames(){
+
+        // Update local state with imageFrames (which contains the originally-scaled frames)
         setScaledFrames(imageFrames);
+
+
+        // For the Image Store, use a deep copy of imageFrames (which contains the originally-scaled frames) to prevent unintended mutations
+        const resetFrames = imageFrames.map(frame => ({
+            tl: [...frame.tl],
+            tr: [...frame.tr],
+            br: [...frame.br],
+            bl: [...frame.bl],
+        }));
+
+        useStore.setState((state) => (
+            {parentImgToFrames : {...state.parentImgToFrames, [parentImageID] : resetFrames}}
+        ))
     }
 
     return (
@@ -125,8 +148,8 @@ export default function PhotoCropComponent({ parentImage, imageFrames }: PhotoCr
         <div className="bg-slate-200 my-4 p-4 rounded-lg">
             <div ref={containerRef} className="w-1/2">
 
-                <h2 className="text-lg font-semibold">{parentImage.name}</h2>
-                <p>{scaledFrames.length} Frame(s) Identified</p>
+                <h2 className="text-lg font-semibold">{parentImageFile.name}</h2>
+                <p>{scaledFrames.length} {scaledFrames.length === 1 ? "Frame" : "Frames"} Detected</p>
 
                 <div className="mt-2 flex gap-2">
                 <Button className="" onClick={handleAddFrame}>
@@ -147,16 +170,22 @@ export default function PhotoCropComponent({ parentImage, imageFrames }: PhotoCr
                             return (
                                 <ImageFrameEditor
                                     imageFrame={frame}
-                                    index={index}
+                                    frameNumber={index}
                                     key={index}
                                     onDrag={(corner: keyof ImageFrame, updatedCornerCoordinate: number[]) => {
                                         const updatedFrames = [...scaledFrames];
                                         updatedFrames[index] = { ...updatedFrames[index], [corner]: updatedCornerCoordinate } // Update correct frame using index
+
                                         setScaledFrames(updatedFrames)
                                     }}
+
+                                    onDragFinished={() => {
+                                        // onDrag will already update the state of scaledFrames to their final position, so when the dragging ends we can just reuse those values to update the Zustand image store
+                                        updateImageFrame(parentImageID, index, {...scaledFrames[index]}) // update the frame of the specific image that has been modified
+                                    }}
+                                    
                                     stageSize={stageSize} />
                             )
-
                         })}
 
 
