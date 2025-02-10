@@ -36,11 +36,19 @@ const useStore = create<ImageState>((set) => ({
     setParentImgToFrames: (mappings : {[parentImgID: string] : ImageFrame[]}) => set((state) => ({parentImgToFrames : mappings})),
 
     updateImageFrame: (parent_img_id : string, index : number, newFrame : ImageFrame) => set((state) => {
+        
 
-        const updatedFrames = {...state.parentImgToFrames};
-        updatedFrames[parent_img_id][index] = newFrame;
+        const rescaledFrame: ImageFrame = {
+            tl: [...newFrame.tl],
+            tr: [...newFrame.tr],
+            br: [...newFrame.br],
+            bl: [...newFrame.bl]
+        };
 
-        return {parentImgToFrames : updatedFrames}
+        const parentFrames = [...(state.parentImgToFrames[parent_img_id] || [])]; 
+        parentFrames[index] = rescaledFrame;
+
+        return {parentImgToFrames : {...state.parentImgToFrames, [parent_img_id] : parentFrames}}
     })
 
   }))

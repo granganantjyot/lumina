@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import PhotoCropComponent from "@/components/photo-crop";
 import { ImageFrame } from "@/components/photo-crop";
 import { Check } from "lucide-react";
-
+import { useImageSocketStore } from "@/store/socket-store";
 
 // Refers to the set of images (cropped photos) that have been detected from a given parent image
 interface DetectedImageSet {
@@ -27,6 +27,10 @@ export default function Crop() {
     const [detectedImageSets, setDetectedImageSets] = useState<DetectedImageSet[]>();
 
     const hasRun = useRef<boolean>(false);
+
+
+    const connectSocket = useImageSocketStore((state) => state.connect)
+    const disconnectSocket = useImageSocketStore((state) => state.connect)
 
 
     useEffect(() => {
@@ -61,7 +65,14 @@ export default function Crop() {
             if (!hasRun.current) {
                 hasRun.current = true;
                 extractImageCrops();
+
+                // Connect to websocket
+                connectSocket()
             }
+        }
+
+        return () => {
+            disconnectSocket(); // Disconnect for clean up
         }
     }, [])
 
@@ -104,7 +115,7 @@ export default function Crop() {
                                 <p className="font-semibold">{detectedImageSets?.length} {detectedImageSets?.length === 1 ? "File" : "Files"} Uploaded</p>
 
                                 <Button className="bg-[#4cacaf] p-4 text-base" onClick={handleConfirmation}>
-                                    Confirm <Check />
+                                    Looks Good <Check />
                                 </Button>
 
                             </div>
