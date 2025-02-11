@@ -9,9 +9,6 @@ interface ImageState{
     imageFiles : File[]
     setImageFiles : (files : File[]) => void
 
-    stageScale : {xScale: number, yScale: number}
-    setStageScale: (xScale: number, yScale: number) => void;
-
     sessionId? : string | null,
     setSessionId : (id : string) => void
 
@@ -34,9 +31,6 @@ const useStore = create<ImageState>((set, get) => ({
 
     imageFiles : [],
     setImageFiles : (files : File[]) => set((state) => ({imageFiles : files})),
-
-    stageScale : {xScale: 1, yScale: 1},
-    setStageScale: (xScale: number, yScale: number) => set((state) => ({stageScale: {xScale: xScale, yScale: yScale}})),
 
     sessionId : null,
     setSessionId : (id : string) => set((state) => ({sessionId : id})),
