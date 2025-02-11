@@ -170,6 +170,12 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
     function handleResetFrames() {
 
+        // Update frame store
+        useFrameStore.setState((state) => (
+            { parentImgToFrames: { ...state.parentImgToFrames, [parentImageID]: imageFrames } } // Pass in full-size (pixel-relative) imageFrames
+        ))
+
+
         // Rescale the imageFrames parameter, to fit onto the stage
         const originalFrames = []
 
@@ -193,7 +199,6 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
         // Update local state, to display reset frames
         setScaledFrames(originalFrames);
 
-
         // Create deep copy
         const resetFrames = originalFrames.map(frame => ({
             tl: [...frame.tl],
@@ -201,11 +206,6 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
             br: [...frame.br],
             bl: [...frame.bl],
         }));
-
-        // Update frame store
-        useFrameStore.setState((state) => (
-            { parentImgToFrames: { ...state.parentImgToFrames, [parentImageID]: resetFrames } }
-        ))
 
         // Update previews
         resetPreviews(parentImageID, stageScale, resetFrames);
