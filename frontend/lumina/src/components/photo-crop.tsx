@@ -99,7 +99,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
             // This will modify imageFrames as well, to store the original scaled frames (this will be useful when resetting the frames since the values from imageFrames can be reused)
             imageFrames.forEach((frame: ImageFrame) => {
-                const tempFrame = frame;
+                const tempFrame = {...frame};
 
                 for (const corner of Object.keys(tempFrame) as (keyof ImageFrame)[]) {
                     tempFrame[corner] = [tempFrame[corner][0] * xScale, tempFrame[corner][1] * yScale]
@@ -170,25 +170,45 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
     function handleResetFrames() {
 
-        // Update local state with imageFrames (which contains the originally-scaled frames)
-        setScaledFrames(imageFrames);
+        // Rescale the imageFrames parameter, to fit onto the stage
+        const originalFrames = []
+
+        for (let frame of imageFrames){
+
+            const rescaledFrame: ImageFrame = {
+                tl: [...frame.tl],
+                tr: [...frame.tr],
+                br: [...frame.br],
+                bl: [...frame.bl]
+            };
+
+            Object.keys(rescaledFrame).forEach((key) => {
+                const [x, y] = rescaledFrame[key as keyof ImageFrame];
+                rescaledFrame[key as keyof ImageFrame] = [x * stageScale.xScale, y * stageScale.yScale]
+            })
+
+            originalFrames.push(rescaledFrame);
+        }
+
+        // Update local state, to display reset frames
+        setScaledFrames(originalFrames);
 
 
-        // For the Image Store, use a deep copy of imageFrames (which contains the originally-scaled frames) to prevent unintended mutations
-        const resetFrames = imageFrames.map(frame => ({
+        // Create deep copy
+        const resetFrames = originalFrames.map(frame => ({
             tl: [...frame.tl],
             tr: [...frame.tr],
             br: [...frame.br],
             bl: [...frame.bl],
         }));
 
-        // Update store
+        // Update frame store
         useFrameStore.setState((state) => (
             { parentImgToFrames: { ...state.parentImgToFrames, [parentImageID]: resetFrames } }
         ))
 
         // Update previews
-        resetPreviews(parentImageID, stageScale, imageFrames);
+        resetPreviews(parentImageID, stageScale, resetFrames);
     }
 
     return (
