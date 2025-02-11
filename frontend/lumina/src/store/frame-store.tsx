@@ -2,7 +2,7 @@ import { ImageFrame } from '@/components/photo-crop'
 import { create } from 'zustand'
 
 
-interface ImageState{
+interface FrameState{
     imageCount : number,
     setImageCount : (newCount : number) => void
 
@@ -24,7 +24,7 @@ interface ImageState{
 
 
 
-const useStore = create<ImageState>((set, get) => ({
+const useFrameStore = create<FrameState>((set, get) => ({
     imageCount : 0,
     setImageCount : (newCount : number) => set((state) => ({imageCount : newCount})),
 
@@ -87,4 +87,4 @@ function rescaleFrame(frame: ImageFrame, xScale: number, yScale: number){
     })
 }
 
-export default useStore;
+export default useFrameStore;

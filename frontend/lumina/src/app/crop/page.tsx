@@ -1,5 +1,5 @@
 "use client";
-import useStore from "@/store/image-store";
+import useFrameStore from "@/store/frame-store";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast"
@@ -20,7 +20,7 @@ interface DetectedImageSet {
 export default function Crop() {
 
     const router = useRouter();
-    const { imageFiles, sessionId, parentImgToFrames, setParentImgToFrames } = useStore();
+    const { imageFiles, sessionId, parentImgToFrames, setParentImgToFrames } = useFrameStore();
 
     const [loading, setLoading] = useState<boolean>(true);
 

@@ -5,7 +5,7 @@ import { Stage, Layer, Image } from "react-konva";
 import ImageFrameEditor from "./ImageFrameEditor";
 import { Button } from "./ui/button";
 import { ImagePlus, RotateCcw, X } from "lucide-react";
-import useStore from "@/store/image-store";
+import useFrameStore from "@/store/frame-store";
 import { useImageSocketStore } from "@/store/socket-store";
 import { useShallow } from 'zustand/react/shallow'
 
@@ -40,9 +40,9 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
     const previewsInitialLoad = useRef<boolean>(false);
 
 
-    const updateImageFrame = useStore(useShallow((state) => state.updateImageFrame)); // To update image frames state in Zustand store
-    const addImageFrame = useStore((state) => state.addImageFrame);
-    const deleteImageFrame = useStore((state) => state.deleteImageFrame);
+    const updateImageFrame = useFrameStore(useShallow((state) => state.updateImageFrame)); // To update image frames state in Zustand store
+    const addImageFrame = useFrameStore((state) => state.addImageFrame);
+    const deleteImageFrame = useFrameStore((state) => state.deleteImageFrame);
 
     const storedPreviewImages = useImageSocketStore(useShallow((state) => state.activePreviews[parentImageID])) || []; // Store the base64 image for all previews
 
@@ -183,7 +183,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
         }));
 
         // Update store
-        useStore.setState((state) => (
+        useFrameStore.setState((state) => (
             { parentImgToFrames: { ...state.parentImgToFrames, [parentImageID]: resetFrames } }
         ))
 

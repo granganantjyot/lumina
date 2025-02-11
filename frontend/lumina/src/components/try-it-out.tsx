@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ImagePlay, Cog, Flame, Loader2 } from "lucide-react"
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast"
-import useStore from "@/store/image-store";
+import useFrameStore from "@/store/frame-store";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -22,7 +22,7 @@ export default function TryItOutComponent() {
 
     const [files, setFiles] = useState<File[]>([]);
 
-    const {setImageCount, setImageFiles, setSessionId} = useStore();
+    const {setImageCount, setImageFiles, setSessionId} = useFrameStore();
 
     function handleStartClick() {
 
