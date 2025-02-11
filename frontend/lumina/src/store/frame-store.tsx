@@ -59,10 +59,17 @@ const useFrameStore = create<FrameState>((set, get) => ({
 
     addImageFrame: (parent_img_id : string, newFrame : ImageFrame, stageScale: {xScale: number, yScale: number}) => set((state) => {
         const currFrames = state.parentImgToFrames[parent_img_id];
-        rescaleFrame(newFrame, stageScale.xScale, stageScale.yScale);
+        
+        const rescaledFrame: ImageFrame = {
+            tl: [...newFrame.tl],
+            tr: [...newFrame.tr],
+            br: [...newFrame.br],
+            bl: [...newFrame.bl]
+        };
+        rescaleFrame(rescaledFrame, stageScale.xScale, stageScale.yScale);
 
         return {
-            parentImgToFrames : {...state.parentImgToFrames, [parent_img_id] : [...currFrames, newFrame]}
+            parentImgToFrames : {...state.parentImgToFrames, [parent_img_id] : [...currFrames, rescaledFrame]}
         }
     }),
 
