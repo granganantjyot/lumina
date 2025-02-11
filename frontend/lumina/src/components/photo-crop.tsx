@@ -6,7 +6,7 @@ import ImageFrameEditor from "./ImageFrameEditor";
 import { Button } from "./ui/button";
 import { ImagePlus, RotateCcw, X } from "lucide-react";
 import useFrameStore from "@/store/frame-store";
-import { useImageSocketStore } from "@/store/socket-store";
+import { usePreviewStore } from "@/store/preview-store";
 import { useShallow } from 'zustand/react/shallow'
 
 
@@ -44,11 +44,11 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
     const addImageFrame = useFrameStore((state) => state.addImageFrame);
     const deleteImageFrame = useFrameStore((state) => state.deleteImageFrame);
 
-    const storedPreviewImages = useImageSocketStore(useShallow((state) => state.activePreviews[parentImageID])) || []; // Store the base64 image for all previews
+    const storedPreviewImages = usePreviewStore(useShallow((state) => state.activePreviews[parentImageID])) || []; // Store the base64 image for all previews
 
-    const requestPreviewUpdate = useImageSocketStore((state) => state.requestPreviewUpdate) // Request update for preview image via websocket
-    const resetPreviews = useImageSocketStore((state) => state.resetPreviews) 
-    const deletePreview = useImageSocketStore((state) => state.deletePreview)
+    const requestPreviewUpdate = usePreviewStore((state) => state.requestPreviewUpdate) // Request update for preview image via websocket
+    const resetPreviews = usePreviewStore((state) => state.resetPreviews) 
+    const deletePreview = usePreviewStore((state) => state.deletePreview)
 
 
     useEffect(() => {

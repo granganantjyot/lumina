@@ -2,7 +2,7 @@ import { ImageFrame } from "@/components/photo-crop";
 import { create } from "zustand";
 
 
-interface ImageSocketState {
+interface PreviewState {
     socket: WebSocket | null // Websocket
 
     activePreviews: {[parentImageID: string] : string[]} // Map parent img ID, to array of base64 string images
@@ -19,7 +19,7 @@ interface ImageSocketState {
 
 }
 
-export const useImageSocketStore = create<ImageSocketState>()((set, get) => ({
+export const usePreviewStore = create<PreviewState>()((set, get) => ({
 
     socket: null,
 

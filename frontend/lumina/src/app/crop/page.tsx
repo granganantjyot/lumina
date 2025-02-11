@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import PhotoCropComponent from "@/components/photo-crop";
 import { ImageFrame } from "@/components/photo-crop";
 import { Check } from "lucide-react";
-import { useImageSocketStore } from "@/store/socket-store";
+import { usePreviewStore } from "@/store/preview-store";
 
 // Refers to the set of images (cropped photos) that have been detected from a given parent image
 interface DetectedImageSet {
@@ -29,8 +29,8 @@ export default function Crop() {
     const hasRun = useRef<boolean>(false);
 
 
-    const connectSocket = useImageSocketStore((state) => state.connect)
-    const disconnectSocket = useImageSocketStore((state) => state.connect)
+    const connectSocket = usePreviewStore((state) => state.connect)
+    const disconnectSocket = usePreviewStore((state) => state.connect)
 
 
     useEffect(() => {
