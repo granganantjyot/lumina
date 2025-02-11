@@ -9,25 +9,35 @@ interface ImageState{
     imageFiles : File[]
     setImageFiles : (files : File[]) => void
 
+    stageScale : {xScale: number, yScale: number}
+    setStageScale: (xScale: number, yScale: number) => void;
+
     sessionId? : string | null,
     setSessionId : (id : string) => void
 
     parentImgToFrames : {[parentImgID: string] : ImageFrame[]} // Maps parent image ids to the list of corresponding image frames that need to be cropped out
     setParentImgToFrames : (mappings : {[parentImgID: string] : ImageFrame[]} ) => void;
 
-    updateImageFrame : (parent_img_id : string, index : number, newFrame : ImageFrame) => void;
+    updateImageFrame : (parent_img_id : string, index : number, newFrame : ImageFrame, stageScale: {xScale: number, yScale: number}) => void;
+
+    addImageFrame : (parent_img_id : string, newFrame : ImageFrame, stageScale: {xScale: number, yScale: number}) => void;
+
+    deleteImageFrame : (parent_img_id : string, index : number) => void;
 }   
 
 
 
-const useStore = create<ImageState>((set) => ({
+const useStore = create<ImageState>((set, get) => ({
     imageCount : 0,
     setImageCount : (newCount : number) => set((state) => ({imageCount : newCount})),
 
 
     imageFiles : [],
     setImageFiles : (files : File[]) => set((state) => ({imageFiles : files})),
-    
+
+    stageScale : {xScale: 1, yScale: 1},
+    setStageScale: (xScale: number, yScale: number) => set((state) => ({stageScale: {xScale: xScale, yScale: yScale}})),
+
     sessionId : null,
     setSessionId : (id : string) => set((state) => ({sessionId : id})),
 
@@ -35,7 +45,7 @@ const useStore = create<ImageState>((set) => ({
     parentImgToFrames : {},
     setParentImgToFrames: (mappings : {[parentImgID: string] : ImageFrame[]}) => set((state) => ({parentImgToFrames : mappings})),
 
-    updateImageFrame: (parent_img_id : string, index : number, newFrame : ImageFrame) => set((state) => {
+    updateImageFrame: (parent_img_id : string, index : number, newFrame : ImageFrame, stageScale: {xScale: number, yScale: number}) => set((state) => {
         
 
         const rescaledFrame: ImageFrame = {
@@ -45,12 +55,42 @@ const useStore = create<ImageState>((set) => ({
             bl: [...newFrame.bl]
         };
 
+        rescaleFrame(rescaledFrame, stageScale.xScale, stageScale.yScale);
+
         const parentFrames = [...(state.parentImgToFrames[parent_img_id] || [])]; 
         parentFrames[index] = rescaledFrame;
 
         return {parentImgToFrames : {...state.parentImgToFrames, [parent_img_id] : parentFrames}}
+    }),
+
+    addImageFrame: (parent_img_id : string, newFrame : ImageFrame, stageScale: {xScale: number, yScale: number}) => set((state) => {
+        const currFrames = state.parentImgToFrames[parent_img_id];
+        rescaleFrame(newFrame, stageScale.xScale, stageScale.yScale);
+
+        return {
+            parentImgToFrames : {...state.parentImgToFrames, [parent_img_id] : [...currFrames, newFrame]}
+        }
+    }),
+
+    deleteImageFrame: (parent_img_id : string, index : number) => set((state) => {
+        const currFrames = [...state.parentImgToFrames[parent_img_id]];
+        currFrames.splice(index, 1);
+
+        return {
+            parentImgToFrames: {...state.parentImgToFrames, [parent_img_id] : currFrames}
+        }
     })
+
+
 
   }))
 
-  export default useStore;
+
+function rescaleFrame(frame: ImageFrame, xScale: number, yScale: number){
+    Object.keys(frame).forEach((key) => {
+        const [x, y] = frame[key as keyof ImageFrame];
+        frame[key as keyof ImageFrame] = [x / xScale, y / yScale]
+    })
+}
+
+export default useStore;
