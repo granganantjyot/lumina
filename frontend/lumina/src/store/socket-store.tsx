@@ -13,6 +13,8 @@ interface ImageSocketState {
 
     resetPreviews: (parentImageID: string, stageScale: {xScale: number, yScale: number}, oldFrames: ImageFrame[]) => void 
 
+    deletePreview: (parentImageID: string, index: number) => void;
+
     disconnect: () => void
 
 }
@@ -84,6 +86,11 @@ export const useImageSocketStore = create<ImageSocketState>()((set, get) => ({
     },
         
     
+    deletePreview: (parentImageID: string, index: number) => {
+        const currentPreviews = get().activePreviews[parentImageID];
+        currentPreviews.splice(index, 1);
+        set((state) => ({activePreviews : {...state.activePreviews, [parentImageID]: currentPreviews}}))
+    },
 
     disconnect: () => {
         get().socket?.close();
