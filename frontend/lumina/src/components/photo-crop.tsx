@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Stage, Layer, Image } from "react-konva";
 import ImageFrameEditor from "./ImageFrameEditor";
 import { Button } from "./ui/button";
-import { ImagePlus, RotateCcw } from "lucide-react";
+import { ImagePlus, RotateCcw, X } from "lucide-react";
 import useStore from "@/store/image-store";
 import { useImageSocketStore } from "@/store/socket-store";
 import { useShallow } from 'zustand/react/shallow'
@@ -41,11 +41,14 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
 
     const updateImageFrame = useStore(useShallow((state) => state.updateImageFrame)); // To update image frames state in Zustand store
+    const addImageFrame = useStore((state) => state.addImageFrame);
+    const deleteImageFrame = useStore((state) => state.deleteImageFrame);
 
     const storedPreviewImages = useImageSocketStore(useShallow((state) => state.activePreviews[parentImageID])) || []; // Store the base64 image for all previews
 
     const requestPreviewUpdate = useImageSocketStore((state) => state.requestPreviewUpdate) // Request update for preview image via websocket
-    const resetPreviews = useImageSocketStore((state) => state.resetPreviews) // Request update for preview image via websocket
+    const resetPreviews = useImageSocketStore((state) => state.resetPreviews) 
+    const deletePreview = useImageSocketStore((state) => state.deletePreview)
 
 
     useEffect(() => {
@@ -82,7 +85,8 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
             let xScale = konvasStageWidth / parentImageWidth;
             let yScale = konvasStageHeight / parentImageHeight;
-            setStageScale({ xScale: xScale, yScale: yScale });
+            setStageScale({ xScale: xScale, yScale: yScale }); // Set local state stage scale
+
 
             console.log("xscale: " + xScale)
             console.log("yscale: " + yScale)
@@ -147,6 +151,21 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
         const updatedFrames = [...scaledFrames, newFrame];
         setScaledFrames(updatedFrames);
+
+        // Update store with new coordinates
+        addImageFrame(parentImageID, newFrame, stageScale)
+    }
+
+    function handleRemoveFrame(index: number) {
+
+        const updatedFrames = [...scaledFrames];
+        updatedFrames.splice(index, 1);
+        setScaledFrames(updatedFrames)
+
+        deletePreview(parentImageID, index)
+
+        // Update store
+        deleteImageFrame(parentImageID, index);
     }
 
     function handleResetFrames() {
@@ -163,6 +182,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
             bl: [...frame.bl],
         }));
 
+        // Update store
         useStore.setState((state) => (
             { parentImgToFrames: { ...state.parentImgToFrames, [parentImageID]: resetFrames } }
         ))
@@ -209,7 +229,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
                                     onDragFinished={() => {
                                         // onDrag will already update the state of scaledFrames to their final position, so when the dragging ends we can just reuse those values to update the Zustand image store
-                                        updateImageFrame(parentImageID, index, { ...scaledFrames[index] }) // update the frame of the specific image that has been modified
+                                        updateImageFrame(parentImageID, index, { ...scaledFrames[index] }, stageScale) // update the frame of the specific image that has been modified
 
                                         // Update the preview images
                                         requestPreviewUpdate(parentImageID, index, { ...scaledFrames[index] }, stageScale)
@@ -230,14 +250,19 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
                 <h2 className="text-lg font-semibold">Previews</h2>
                 <p className="text-sm">Note: Previews do not reflect final image quality</p>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-3 mt-5">
 
-
-                    {storedPreviewImages.reverse().map((previewImage: string, index: number) => (
-                        <img src={previewImage} className="h-48 aspect-auto" key={index}></img>
+                    {storedPreviewImages.map((previewImage: string, index: number) => (
+                        <div className="relative inline-block" key={index}>
+                            <img src={previewImage} className="max-h-48 aspect-auto min-w-32"></img>
+                            <button
+                                className="absolute -top-2 -right-2 bg-white opacity-80 rounded-full p-1 shadow-md hover:opacity-100"
+                                onClick={() => {handleRemoveFrame(index)}}
+                            >
+                                <X className="w-3 h-3 text-red-500" />
+                            </button>
+                        </div>
                     ))}
-
-
 
                 </div>
             </div>
