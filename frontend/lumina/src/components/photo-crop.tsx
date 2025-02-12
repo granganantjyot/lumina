@@ -8,6 +8,7 @@ import { ImagePlus, RotateCcw, X } from "lucide-react";
 import useFrameStore from "@/store/frame-store";
 import { usePreviewStore } from "@/store/preview-store";
 import { useShallow } from 'zustand/react/shallow'
+import LoadingSpinner from "./loading-spinner";
 
 
 export interface ImageFrame { // contains all 4 corners of the extracted image
@@ -37,23 +38,21 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
     const containerRef = useRef<HTMLDivElement>(null);
     const hasRun = useRef<boolean>(false);
-    const previewsInitialLoad = useRef<boolean>(false);
+    const [expectedPreviewsCount, setExpectedPreviewsCount] = useState<number>(0);
 
 
+    // Frame store
     const updateImageFrame = useFrameStore(useShallow((state) => state.updateImageFrame)); // To update image frames state in Zustand store
     const addImageFrame = useFrameStore((state) => state.addImageFrame);
     const deleteImageFrame = useFrameStore((state) => state.deleteImageFrame);
 
+    // Preview store
     const storedPreviewImages = usePreviewStore(useShallow((state) => state.activePreviews[parentImageID])) || []; // Store the base64 image for all previews
-
     const requestPreviewUpdate = usePreviewStore((state) => state.requestPreviewUpdate) // Request update for preview image via websocket
-    const resetPreviews = usePreviewStore((state) => state.resetPreviews) 
+    const resetPreviews = usePreviewStore((state) => state.resetPreviews)
     const deletePreview = usePreviewStore((state) => state.deletePreview)
 
 
-    useEffect(() => {
-        console.log(`RESETTING: ${parentImageID}`)
-    })
     // Handle initial canvas load
     useEffect(() => {
         if (hasRun.current) return; // Prevent double execution // TODO: remove ref check (put in place right now to prevent double useEffect execution)
@@ -99,7 +98,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
             // This will modify imageFrames as well, to store the original scaled frames (this will be useful when resetting the frames since the values from imageFrames can be reused)
             imageFrames.forEach((frame: ImageFrame) => {
-                const tempFrame = {...frame};
+                const tempFrame = { ...frame };
 
                 for (const corner of Object.keys(tempFrame) as (keyof ImageFrame)[]) {
                     tempFrame[corner] = [tempFrame[corner][0] * xScale, tempFrame[corner][1] * yScale]
@@ -109,6 +108,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
             });
 
             setScaledFrames(updatedFrames);
+            setExpectedPreviewsCount(updatedFrames.length);
         };
 
 
@@ -132,7 +132,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
             }
         }
 
-        previewsInitialLoad.current = true;
+
 
     }, [scaledFrames.length])
 
@@ -154,6 +154,8 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
         // Update store with new coordinates
         addImageFrame(parentImageID, newFrame, stageScale)
+
+        setExpectedPreviewsCount((current) => current + 1)
     }
 
     function handleRemoveFrame(index: number) {
@@ -162,24 +164,43 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
         updatedFrames.splice(index, 1);
         setScaledFrames(updatedFrames)
 
-        deletePreview(parentImageID, index)
 
         // Update store
         deleteImageFrame(parentImageID, index);
+
+        // previews
+        deletePreview(parentImageID, index)
+
+
+        // Update expectedPreviewsCount
+        if (updatedFrames.length === 0) {
+            // If no more frames left, immediately set to 0
+            setExpectedPreviewsCount(0);
+        }
+        else {
+            // Else subscribe to changes in preview store, and update expectedPreviewsCount only after store is updated (to avoid race condition)
+            const unsubscribe = usePreviewStore.subscribe((state) => {
+                setExpectedPreviewsCount((current) => current - 1) // Decrement
+                unsubscribe();
+            });
+        }
     }
 
     function handleResetFrames() {
 
+        // Update expected count of previews
+        setExpectedPreviewsCount(imageFrames.length) // Set it to length of the original imageFrames array
+
         // Update frame store
         useFrameStore.setState((state) => (
-            { parentImgToFrames: { ...state.parentImgToFrames, [parentImageID]: imageFrames } } // Pass in full-size (pixel-relative) imageFrames
+            { parentImgToFrames: { ...state.parentImgToFrames, [parentImageID]: imageFrames } } // Pass in full-size (original resolution) imageFrames
         ))
 
 
-        // Rescale the imageFrames parameter, to fit onto the stage
+        // Rescale a copy imageFrames, to fit onto the stage
         const originalFrames = []
 
-        for (let frame of imageFrames){
+        for (let frame of imageFrames) {
 
             const rescaledFrame: ImageFrame = {
                 tl: [...frame.tl],
@@ -266,23 +287,24 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
             </div>
 
 
-            <div className="w-1/2 px-5">
+            <div className="w-1/2 px-5 ml-5">
                 <h2 className="text-lg font-semibold">Previews</h2>
                 <p className="text-sm">Note: Previews do not reflect final image quality</p>
 
                 <div className="flex flex-wrap gap-3 mt-5">
 
-                    {storedPreviewImages.map((previewImage: string, index: number) => (
+
+                    {storedPreviewImages.length === expectedPreviewsCount ? storedPreviewImages.map((previewImage: string, index: number) => (
                         <div className="relative inline-block" key={index}>
                             <img src={previewImage} className="max-h-48 aspect-auto min-w-32"></img>
                             <button
                                 className="absolute -top-2 -right-2 bg-white opacity-80 rounded-full p-1 shadow-md hover:opacity-100"
-                                onClick={() => {handleRemoveFrame(index)}}
+                                onClick={() => { handleRemoveFrame(index) }}
                             >
                                 <X className="w-3 h-3 text-red-500" />
                             </button>
                         </div>
-                    ))}
+                    )) : <LoadingSpinner width={10} height={10} fill="#4cacaf"/>}
 
                 </div>
             </div>
