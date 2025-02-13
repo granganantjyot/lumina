@@ -39,6 +39,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
     const containerRef = useRef<HTMLDivElement>(null);
     const hasRun = useRef<boolean>(false);
     const [expectedPreviewsCount, setExpectedPreviewsCount] = useState<number>(0);
+    const [isPreviewLoading, setIsPreviewsLoading] = useState(false);
 
 
     // Frame store
@@ -47,7 +48,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
     const deleteImageFrame = useFrameStore((state) => state.deleteImageFrame);
 
     // Preview store
-    const storedPreviewImages = usePreviewStore(useShallow((state) => state.activePreviews[parentImageID])) || []; // Store the base64 image for all previews
+    const [storedPreviewImages, setStoredPreviewImages] = useState<string[]>([]); // Store the base64 image for all previews
     const requestPreviewUpdate = usePreviewStore((state) => state.requestPreviewUpdate) // Request update for preview image via websocket
     const resetPreviews = usePreviewStore((state) => state.resetPreviews)
     const deletePreview = usePreviewStore((state) => state.deletePreview)
@@ -136,6 +137,18 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
     }, [scaledFrames.length])
 
+
+    // Subscribe to preview changes
+    useEffect(() => {
+        const unsubscribe = usePreviewStore.subscribe(
+            (state) => state.activePreviews[parentImageID],
+            (newImages) => {
+                setStoredPreviewImages(newImages);
+                setIsPreviewsLoading(false); // When a preview loads in, stop loading
+            }
+        )
+        return unsubscribe;
+    }, [])
 
     function handleAddFrame() {
         // Add a 100 x 100 frame in the middle. First compute the coordinates of the top-left (tl) corner
@@ -251,7 +264,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
                 </div>
 
 
-                <Stage width={stageSize.width + 20} height={stageSize.height + 20} className="mt-5">
+                <Stage width={stageSize.width + 20} height={stageSize.height + 20} className={`mt-5 ${isPreviewLoading ? "pointer-events-none" : ""}`}>
                     <Layer>
                         {konvasImage && <Image image={konvasImage} width={stageSize.width} height={stageSize.height} />}
 
@@ -269,6 +282,9 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
                                     }}
 
                                     onDragFinished={() => {
+                                        setIsPreviewsLoading(true);
+
+
                                         // onDrag will already update the state of scaledFrames to their final position, so when the dragging ends we can just reuse those values to update the Zustand image store
                                         updateImageFrame(parentImageID, index, { ...scaledFrames[index] }, stageScale) // update the frame of the specific image that has been modified
 
@@ -293,8 +309,8 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
                 <div className="flex flex-wrap gap-3 mt-5">
 
-
-                    {storedPreviewImages.length === expectedPreviewsCount ? storedPreviewImages.map((previewImage: string, index: number) => (
+                    {/* For previews to be rendered, the expectedPreviewsCount must be met, and no preview should still be loading in */}
+                    {(storedPreviewImages.length === expectedPreviewsCount && !isPreviewLoading) ? storedPreviewImages.map((previewImage: string, index: number) => (
                         <div className="relative inline-block" key={index}>
                             <img src={previewImage} className="max-h-48 aspect-auto min-w-32"></img>
                             <button
@@ -304,7 +320,8 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
                                 <X className="w-3 h-3 text-red-500" />
                             </button>
                         </div>
-                    )) : <LoadingSpinner width={10} height={10} fill="#4cacaf"/>}
+                    )) 
+                    : <LoadingSpinner width={10} height={10} fill="#4cacaf"/>}
 
                 </div>
             </div>
