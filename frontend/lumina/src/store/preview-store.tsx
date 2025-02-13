@@ -1,5 +1,6 @@
 import { ImageFrame } from "@/components/photo-crop";
 import { create } from "zustand";
+import { subscribeWithSelector } from 'zustand/middleware'
 
 
 interface PreviewState {
@@ -19,7 +20,7 @@ interface PreviewState {
 
 }
 
-export const usePreviewStore = create<PreviewState>()((set, get) => ({
+export const usePreviewStore = create<PreviewState>()(subscribeWithSelector((set, get) => ({
 
     socket: null,
 
@@ -98,4 +99,4 @@ export const usePreviewStore = create<PreviewState>()((set, get) => ({
         set({socket: null});
     }
 
-}))
+})))
