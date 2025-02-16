@@ -12,7 +12,7 @@ interface FrameState{
     sessionId? : string | null,
     setSessionId : (id : string) => void
 
-    parentImgToFrames : {[parentImgID: string] : ImageFrame[]} // Maps parent image ids to the list of corresponding image frames that need to be cropped out
+    parentImgToFrames : {[parentImgID: string] : ImageFrame[]} | null // Maps parent image ids to the list of corresponding image frames that need to be cropped out
     setParentImgToFrames : (mappings : {[parentImgID: string] : ImageFrame[]} ) => void;
 
     updateImageFrame : (parent_img_id : string, index : number, newFrame : ImageFrame, stageScale: {xScale: number, yScale: number}) => void;
@@ -36,7 +36,7 @@ const useFrameStore = create<FrameState>((set, get) => ({
     setSessionId : (id : string) => set((state) => ({sessionId : id})),
 
 
-    parentImgToFrames : {},
+    parentImgToFrames : null,
     setParentImgToFrames: (mappings : {[parentImgID: string] : ImageFrame[]}) => set((state) => ({parentImgToFrames : mappings})),
 
     updateImageFrame: (parent_img_id : string, index : number, newFrame : ImageFrame, stageScale: {xScale: number, yScale: number}) => set((state) => {
@@ -51,14 +51,14 @@ const useFrameStore = create<FrameState>((set, get) => ({
 
         rescaleFrame(rescaledFrame, stageScale.xScale, stageScale.yScale);
 
-        const parentFrames = [...(state.parentImgToFrames[parent_img_id] || [])]; 
+        const parentFrames = [...((state.parentImgToFrames && state.parentImgToFrames[parent_img_id]) || [])]; 
         parentFrames[index] = rescaledFrame;
 
         return {parentImgToFrames : {...state.parentImgToFrames, [parent_img_id] : parentFrames}}
     }),
 
     addImageFrame: (parent_img_id : string, newFrame : ImageFrame, stageScale: {xScale: number, yScale: number}) => set((state) => {
-        const currFrames = state.parentImgToFrames[parent_img_id];
+        const currFrames = (state.parentImgToFrames && state.parentImgToFrames[parent_img_id]) || [];
         
         const rescaledFrame: ImageFrame = {
             tl: [...newFrame.tl],
@@ -74,7 +74,7 @@ const useFrameStore = create<FrameState>((set, get) => ({
     }),
 
     deleteImageFrame: (parent_img_id : string, index : number) => set((state) => {
-        const currFrames = [...state.parentImgToFrames[parent_img_id]];
+        const currFrames = state.parentImgToFrames ? [...state.parentImgToFrames[parent_img_id]] : [];
         currFrames.splice(index, 1);
 
         return {
