@@ -38,16 +38,29 @@ export default function Crop() {
         if (sessionId == null) {
             router.push("/");
         }
+
+        // Else if existing frames, repopulate state (the user has returned from another page)
+        else if (parentImgToFrames){
+
+            const reuse = []
+
+            for (const [parentImageID, imageFrames] of Object.entries(parentImgToFrames)){
+                reuse.push({parentImgID: parentImageID, imageFrames: imageFrames})
+            }
+
+            setDetectedImageSets(reuse)
+            setLoading(false);
+        }
+
+        // Else brand new session, initialize
         else {
             async function extractImageCrops() {
                 try {
-                    console.log("making request...")
                     const formData = new FormData();
                     imageFiles.forEach((file) => { formData.append("files", file) })
                     formData.append("session_id", sessionId ?? "")
 
                     const response = await axios.post("http://127.0.0.1:8000/api/upload", formData, { headers: { "Content-Type": "multipart/form-data" } });
-                    console.log(response.data)
 
 
                     populateImageStore(response.data.processedResult);
@@ -157,12 +170,10 @@ export default function Crop() {
         });
 
         setParentImgToFrames(parentImgToFrames);
-        console.log("Image Store Populated")
-        console.log(parentImgToFrames)
     }
 
     function handleConfirmation() {
-        console.log(parentImgToFrames)
+        router.push("/enhance")
     }
 }
 
