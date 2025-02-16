@@ -2,6 +2,26 @@ import cv2
 import numpy as np
 
 
+
+def is_background_dark(grayed_image, border_ratio=0.1, threshold=75): # Threshold can be between 0 - 255 color
+
+    h, w = grayed_image.shape[:2]
+
+    # Get samples from all 4 borders
+    top = grayed_image[0:int(border_ratio*h), :]
+    bottom = grayed_image[int((1-border_ratio)*h):h, :]
+    left = grayed_image[:, 0:int(border_ratio*w)]
+    right = grayed_image[:, int((1-border_ratio)*w):w]
+
+    # Combine into one array
+    border_pixels = np.concatenate((top.flatten(), bottom.flatten(),
+                                    left.flatten(), right.flatten()), axis=0)
+    mean_border = np.mean(border_pixels)
+
+    # If the border is darker than the threshold, then assume a dark background
+    return mean_border < threshold
+
+
 async def get_images_corners(image_file):
     print("getting corners")
     
@@ -12,15 +32,26 @@ async def get_images_corners(image_file):
 
     # Convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    gray = cv2.normalize(gray, None, 0, 255, cv2.NORM_MINMAX)
-    
-    # Apply GaussianBlur to reduce noise and improve edge detection
-    blurred = cv2.GaussianBlur(gray, (7, 7), 0)
-    
-    # Perform adaptive thresholding to create a binary image
-    thresh = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
+
+
+    # Applying different threshold depending on background color
+    if (is_background_dark(gray)):
+        gray = 255 - gray # invert image
+        gray = cv2.normalize(gray, None, 0, 255, cv2.NORM_MINMAX)
+
+        # Apply GaussianBlur to reduce noise and improve edge detection
+        blurred = cv2.GaussianBlur(gray, (7, 7), 0)
+        _, thresh = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+
+    else:
+        gray = cv2.normalize(gray, None, 0, 255, cv2.NORM_MINMAX)
+
+        # Apply GaussianBlur to reduce noise and improve edge detection
+        blurred = cv2.GaussianBlur(gray, (7, 7), 0)
+        thresh = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
                                    cv2.THRESH_BINARY_INV, 11, 2)
-    
+
+
     # Canny edge detection
     edges = cv2.Canny(blurred, 50, 150)
 
