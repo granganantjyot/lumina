@@ -35,19 +35,16 @@ def rotate_image(image, angle):
         return image
 
 
-
-def auto_rotate_image(image):
-
-
+def get_angle(image):
 
     # Create grey-scale version of image
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     landmarks = get_landmarks(gray)
 
-    # If landmarks have been detected in default orientation, we can return the image as-is
+    # If landmarks have been detected in default orientation, we can return 0 degree rotation
     if landmarks is not None:
-        return image
+        return 0
 
     # Else, try all other rotations possible
     else:
@@ -59,9 +56,22 @@ def auto_rotate_image(image):
 
             # If face landmarks are detected, then this is the rotation we need
             if landmarks is not None:
-                return rotate_image(image, angle)
+                return angle
             
+    return 0
 
-    return image
+
+def auto_rotate_image(image):
+
+    # Use a downscaled version of the original image for faster processing
+    resized = cv2.resize(image, (500, int(500 * (image.shape[0] / image.shape[1]))))
+
+    angle = get_angle(resized)
+
+    return rotate_image(image, angle), angle
+
+
+
+    
 
 
