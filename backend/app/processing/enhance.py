@@ -5,10 +5,12 @@ import numpy as np
 from processing import auto_rotate
 from concurrent.futures import ProcessPoolExecutor
 from datetime import date, datetime
+import os
+import uuid
 
 def enhance(args):
 
-    parent_img_id, corners = args
+    parent_img_id, corners, sessionId = args
 
     image = cv2.imread(f"../uploads/{parent_img_id}.png")
 
@@ -45,12 +47,23 @@ def enhance(args):
     _, buffer = cv2.imencode(".jpg", warped_image, [cv2.IMWRITE_JPEG_QUALITY, 80]) # return the original image with auto-rotated angle
  
     
+    # Save processed image in temporary directory
+    output_dir = f"../processed_images/{sessionId}"
+    os.makedirs(output_dir, exist_ok=True)
+
+    image_id = str(uuid.uuid4())
+
+    
+    cv2.imwrite(f"{output_dir}/{image_id}.png", warped_image)
+
+    
     return {
         "angle": angle, 
         "image" : f"data:image/jpg;base64,{base64.b64encode(buffer).decode("utf-8")}", 
         "dimensions" : rotated_image.shape[0:2],
-        "date" : datetime.now().strftime("%a %b %d %Y"),
-        "parentImageID" : parent_img_id
+        "date" : datetime.now().strftime("%Y-%m-%d"),
+        "parentImageID" : parent_img_id,
+        "imageID" : image_id
         }
 
 
