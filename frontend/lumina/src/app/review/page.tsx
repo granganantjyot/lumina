@@ -11,6 +11,9 @@ import { format } from "date-fns"
 
 import DatePicker from "@/components/date-picker";
 
+import useConfirmedImageStore from "@/store/confirmed-image-store";
+import {ConfirmedImage} from "@/store/confirmed-image-store";
+
 
 
 interface ProcessedImage {
@@ -19,6 +22,7 @@ interface ProcessedImage {
     dimensions: number[],
     date: string,
     parentImageID: string
+    imageID: string
 }
 
 export default function Review() {
@@ -27,6 +31,8 @@ export default function Review() {
     const sessionId = useFrameStore((state) => state.sessionId);
     const imageCount = useFrameStore((state) => state.imageCount);
     const parentImgToFrames = useFrameStore((state) => state.parentImgToFrames);
+
+    const setImages = useConfirmedImageStore((state) => state.setConfirmedImages)
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -41,7 +47,7 @@ export default function Review() {
 
         // Backend query
         async function getProcessedImages() {
-            const response = await axios.post("http://127.0.0.1:8000/api/process", parentImgToFrames);
+            const response = await axios.post("http://127.0.0.1:8000/api/process", { sessionId: sessionId, parentImgToFrames: parentImgToFrames });
             console.log(response.data)
             setIsLoading(false)
             setProcessedImages(response.data.images)
@@ -81,7 +87,18 @@ export default function Review() {
                                     <p className="font-semibold">{processedImages.length} {processedImages.length == 1 ? "Frame" : "Frames"} Generated</p>
                                 </div>
 
-                                <Button className="bg-[#c94b4b] p-4 text-base" onClick={() => { }}>
+                                <Button className="bg-[#c94b4b] p-4 text-base" onClick={() => {
+                                    const images: ConfirmedImage[] = []
+
+                                    processedImages.forEach((image, index) => {
+                                        images.push({ imageID: image.imageID, angle: image.angle, date: image.date, parentImageID: image.parentImageID })
+                                    })
+
+
+                                    setImages(processedImages)
+                                    router.push("/download")
+
+                                }}>
                                     Looks Good <Check />
                                 </Button>
 
@@ -91,7 +108,7 @@ export default function Review() {
 
 
                             <div className="flex flex-wrap gap-5 justify-between my-4">
-                                {processedImages.map(({ image, angle, dimensions, date, parentImageID }, index) => {
+                                {processedImages.map(({ image, angle, dimensions, date }, index) => {
 
                                     return (
                                         <div className="bg-slate-200 p-4 rounded-lg min-w-1/3" key={index}>
@@ -156,7 +173,7 @@ export default function Review() {
 
                                                             // Update date of image
                                                             const copy = [...processedImages];
-                                                            const updated = { ...copy[index], date: selected.toString() }
+                                                            const updated = { ...copy[index], date: format(selected, "yyyy-MM-dd") }
                                                             copy[index] = updated;
                                                             setProcessedImages(copy)
 
