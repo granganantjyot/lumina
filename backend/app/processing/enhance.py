@@ -7,6 +7,7 @@ from concurrent.futures import ProcessPoolExecutor
 from datetime import date, datetime
 import os
 import uuid
+from PIL import Image
 
 def enhance(args):
 
@@ -44,17 +45,18 @@ def enhance(args):
 
     rotated_image, angle = auto_rotate.auto_rotate_image(warped_image)
 
-    _, buffer = cv2.imencode(".jpg", warped_image, [cv2.IMWRITE_JPEG_QUALITY, 80]) # return the original image with auto-rotated angle
+    _, buffer = cv2.imencode(".jpg", warped_image, [cv2.IMWRITE_JPEG_QUALITY, 80]) # return the cropped image with auto-rotated angle
  
     
     # Save processed image in temporary directory
     output_dir = f"../processed_images/{sessionId}"
     os.makedirs(output_dir, exist_ok=True)
-
     image_id = str(uuid.uuid4())
 
-    
-    cv2.imwrite(f"{output_dir}/{image_id}.png", warped_image)
+    warped_image = cv2.cvtColor(warped_image, cv2.COLOR_BGR2RGB)
+    child_img = Image.fromarray(warped_image)
+    parent_img = Image.open(f"../uploads/{parent_img_id}.png")
+    child_img.save(f"{output_dir}/{image_id}.png",icc_profile=parent_img.info.get('icc_profile')) # Save with icc profile of original parent image
 
     
     return {
