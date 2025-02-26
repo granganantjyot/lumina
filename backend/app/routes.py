@@ -1,8 +1,7 @@
 import json
 from textwrap import indent
 from fastapi import UploadFile, APIRouter, Form, Request
-from fastapi.responses import FileResponse
-from typing import Annotated, Dict
+from typing import Annotated
 from processing.corners import get_images_corners
 import os
 import shutil
@@ -58,3 +57,55 @@ async def process(request: Request):
 
     return {"images": enhance_parallel(image_data)}
 
+
+@router.post("/api/confirm")
+async def confirm(request: Request):
+
+    body = await request.json()
+    finalImages = body["finalImages"]
+    sessionId = body['sessionId']
+
+    for image in finalImages:
+
+        # Apply final rotation
+        rotate_processed_image(sessionId, image["imageID"], image["angle"])
+
+        # Apply metadata updates
+        apply_date_metadata(sessionId, image["imageID"], image["date"])
+
+        # Delete all uploaded parent images
+        parent_image_path = f"{UPLOAD_FOLDER}/{image["parentImageID"]}.png"
+        if os.path.exists(parent_image_path):
+            os.remove(parent_image_path)
+
+    # Create zip folder for download
+    processed_images_folder = f"../processed_images/{sessionId}"
+    zip_folder = f"../downloads/lumina_{sessionId}"
+    shutil.make_archive(zip_folder, 'zip', processed_images_folder)
+
+    # Delete old processed images
+    processed_images_path = f"../processed_images/{sessionId}"
+
+    if os.path.exists(processed_images_path):
+        shutil.rmtree(processed_images_path)
+
+    print(json.dumps(body, indent=4))
+
+
+    # TODO: Schedule deletion of the zip file after 5 minutes
+
+    # Update analytics
+    images_processed = 0
+    with open('../analytics.json', 'r+') as f:
+        data = json.load(f)
+        data["sessions"] += 1
+        images_processed = data["imagesProcessed"]
+        data["imagesProcessed"] += len(finalImages)
+
+        f.seek(0)
+        json.dump(data, f, indent=4)
+        f.truncate()
+
+    return {"download": f"lumina_{sessionId}.zip",
+            "analytics": [images_processed, len(finalImages)]
+            }
