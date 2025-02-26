@@ -48,6 +48,7 @@ export default function Crop() {
                 reuse.push({parentImgID: parentImageID, imageFrames: imageFrames})
             }
 
+            // TODO: reconnect socket if needed
             setDetectedImageSets(reuse)
             setLoading(false);
         }
@@ -173,7 +174,7 @@ export default function Crop() {
     }
 
     function handleConfirmation() {
-        router.push("/enhance")
+        router.push("/review")
     }
 }
 
