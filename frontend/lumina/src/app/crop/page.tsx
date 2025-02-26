@@ -1,6 +1,6 @@
 "use client";
 import useFrameStore from "@/store/frame-store";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,6 @@ export default function Crop() {
 
     const [detectedImageSets, setDetectedImageSets] = useState<DetectedImageSet[]>();
 
-    const hasRun = useRef<boolean>(false);
 
 
     const connectSocket = usePreviewStore((state) => state.connect)
@@ -40,12 +39,12 @@ export default function Crop() {
         }
 
         // Else if existing frames, repopulate state (the user has returned from another page)
-        else if (parentImgToFrames){
+        else if (parentImgToFrames) {
 
             const reuse = []
 
-            for (const [parentImageID, imageFrames] of Object.entries(parentImgToFrames)){
-                reuse.push({parentImgID: parentImageID, imageFrames: imageFrames})
+            for (const [parentImageID, imageFrames] of Object.entries(parentImgToFrames)) {
+                reuse.push({ parentImgID: parentImageID, imageFrames: imageFrames })
             }
 
             // TODO: reconnect socket if needed
@@ -75,14 +74,10 @@ export default function Crop() {
 
             }
 
-            // TODO: REMOVE THE IF- FOR PRODUCTION. BECAUSE OF REACTSTRICTMODE, USEEFFECT IS EXECUTED TWICE, BUT WE CAN DO USEREF TO KEEP TRACK IF ITS ALREADY BEEN EXECUTED
-            if (!hasRun.current) {
-                hasRun.current = true;
-                extractImageCrops();
+            extractImageCrops();
 
-                // Connect to websocket
-                connectSocket()
-            }
+            // Connect to websocket
+            connectSocket()
         }
 
         return () => {
