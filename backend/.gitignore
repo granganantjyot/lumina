@@ -2,3 +2,5 @@ venv
 __pycache__
 .DS_STORE
 uploads
+processed_images
+downloads
