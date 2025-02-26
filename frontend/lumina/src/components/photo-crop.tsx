@@ -312,7 +312,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
                     {/* For previews to be rendered, the expectedPreviewsCount must be met, and no preview should still be loading in */}
                     {(storedPreviewImages.length === expectedPreviewsCount && !isPreviewLoading) ? storedPreviewImages.map((previewImage: string, index: number) => (
                         <div className="relative inline-block" key={index}>
-                            <img src={previewImage} className="max-h-48 aspect-auto min-w-32"></img>
+                            <img src={previewImage} className="max-h-48 aspect-auto"></img>
                             <button
                                 className="absolute -top-2 -right-2 bg-white opacity-80 rounded-full p-1 shadow-md hover:opacity-100"
                                 onClick={() => { handleRemoveFrame(index) }}
