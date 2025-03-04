@@ -107,11 +107,11 @@ export default function Review() {
 
 
 
-                            <div className="flex flex-wrap gap-5 justify-between my-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-4">
                                 {processedImages.map(({ image, angle, dimensions, date }, index) => {
 
                                     return (
-                                        <div className="bg-slate-200 p-4 rounded-lg min-w-1/3" key={index}>
+                                        <div className="bg-slate-200 p-4 rounded-lg" key={index}>
 
 
                                             <div className=" flex flex-row items-center">
@@ -128,7 +128,7 @@ export default function Review() {
 
 
 
-                                                <div className="ml-5 space-y-3">
+                                                <div className="ml-7 space-y-3">
 
                                                     <div>
                                                         <p className="text-sm font-medium">Rotated</p>
@@ -136,13 +136,13 @@ export default function Review() {
                                                     </div>
 
                                                     <div>
-                                                        <p className="text-sm font-medium">Dimensions</p>
+                                                        <p className="text-sm font-medium">Upscaled To</p>
                                                         <p className="">{(`${dimensions[1]} x ${dimensions[0]}`)}</p>
                                                     </div>
 
                                                     <div>
                                                         <p className="text-sm font-medium">Metadata Date</p>
-                                                        <p className="">{date && format(new Date(date), "PPP")}</p>
+                                                        <p className="">{date}</p>
                                                     </div>
 
                                                 </div>
@@ -170,10 +170,13 @@ export default function Review() {
                                                     }
                                                     onDateSelect={
                                                         (selected) => {
+                                                            
 
                                                             // Update date of image
                                                             const copy = [...processedImages];
                                                             const updated = { ...copy[index], date: format(selected, "yyyy-MM-dd") }
+
+                                                            
                                                             copy[index] = updated;
                                                             setProcessedImages(copy)
 
