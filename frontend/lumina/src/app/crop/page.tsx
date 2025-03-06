@@ -46,7 +46,7 @@ export default function Crop() {
                 reuse.push({ parentImgID: parentImageID, imageFrames: imageFrames })
             }
 
-            // TODO: reconnect socket if needed
+            connectSocket() // Reconnect to websocket
             setDetectedImageSets(reuse)
             setLoading(false);
         }
