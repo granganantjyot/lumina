@@ -106,6 +106,8 @@ async def confirm(request: Request):
         json.dump(data, f, indent=4)
         f.truncate()
 
-    return {"download": f"lumina_{sessionId}.zip",
+
+
+    return {"download": f"{str(request.base_url)}downloads/lumina_{sessionId}.zip",
             "analytics": [images_processed, len(finalImages)]
             }
