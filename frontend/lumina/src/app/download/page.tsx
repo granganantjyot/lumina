@@ -41,35 +41,24 @@ export default function Download() {
 
 
         async function getDownloadLink() {
-            const response = await axios.post("http://127.0.0.1:8000/api/confirm", { sessionId: sessionId, finalImages: confirmedImages });
+            const response = await fetch(`/api/confirm/${sessionId}`, {
+                method: "POST",
+                body: JSON.stringify({ finalImages: confirmedImages }),
+            });
+            const data = await response.json()
+            
 
-            const url = `http://localhost:8000/downloads/${response.data.download}`
-            setDownloadUrl(url);
-            setAnalytics(response.data.analytics)
+
+            setDownloadUrl(data.download);
+            setAnalytics(data.analytics)
 
             setIsLoading(false)
-            window.location.href = url
+            window.location.href = data.download
         }
         getDownloadLink()
 
     }, [])
 
-    async function download() {
-        // const response = await axios.post("http://127.0.0.1:8000/api/confirm", { sessionId: sessionId, finalImages: images }, { responseType: "blob" });
-
-        // const blob = new Blob([response.data], { type: "application/zip" });
-        // const url = window.URL.createObjectURL(blob);
-
-        // // Create a temporary <a> tag and trigger download
-        // const a = document.createElement("a");
-        // a.href = url;
-        // a.download = "processed_images.zip"; // User-friendly name
-        // document.body.appendChild(a);
-        // a.click();
-        // document.body.removeChild(a);
-        // window.URL.revokeObjectURL(url);
-    }
-    download();
 
     return (
 
@@ -93,7 +82,7 @@ export default function Download() {
 
                             <div className="text-center space-y-6">
 
-                                <Image src="/logo.svg" height={200} width={200} className="inline-block" alt="logo" />
+                                <Image src="/logo.svg" height={200} width={200} className="inline-block" alt="logo" priority />
                                 <p className="font-medium text-3xl">
                                     Thank you for using Lumina!</p>
 

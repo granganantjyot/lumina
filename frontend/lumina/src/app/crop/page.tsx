@@ -2,14 +2,13 @@
 import useFrameStore from "@/store/frame-store";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button";
-import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import PhotoCropComponent from "@/components/photo-crop";
 import { ImageFrame } from "@/components/photo-crop";
 import { Check } from "lucide-react";
 import { usePreviewStore } from "@/store/preview-store";
+import { toast } from "@/hooks/use-toast";
 
 // Refers to the set of images (cropped photos) that have been detected from a given parent image
 interface DetectedImageSet {
@@ -58,17 +57,22 @@ export default function Crop() {
                 try {
                     const formData = new FormData();
                     imageFiles.forEach((file) => { formData.append("files", file) })
-                    formData.append("session_id", sessionId ?? "")
-
-                    const response = await axios.post("http://127.0.0.1:8000/api/upload", formData, { headers: { "Content-Type": "multipart/form-data" } });
 
 
-                    populateImageStore(response.data.processedResult);
-                    setDetectedImageSets(response.data.processedResult);
+                    const response = await fetch(`/api/upload/${sessionId}`, {
+                        method: "POST",
+                        body: formData,
+                    });
+                    const data = await response.json()
+                    
+
+                    populateImageStore(data.processedResult);
+                    setDetectedImageSets(data.processedResult);
                     setLoading(false);
 
                 } catch (error) {
                     console.log(error);
+                    toast({ title: "An Error Occurred", variant: "destructive", })
                     router.push("/");
                 }
 

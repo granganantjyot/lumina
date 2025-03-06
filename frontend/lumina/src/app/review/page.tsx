@@ -39,18 +39,23 @@ export default function Review() {
     const [processedImages, setProcessedImages] = useState<ProcessedImage[]>([])
 
     useEffect(() => {
+
         // If invalid session id, return to home page
         if (!sessionId) {
             router.push("/");
+            return;
         }
-
 
         // Backend query
         async function getProcessedImages() {
-            const response = await axios.post("http://127.0.0.1:8000/api/process", { sessionId: sessionId, parentImgToFrames: parentImgToFrames });
-            console.log(response.data)
+            const response = await fetch(`/api/process/${sessionId}`, {
+                method: "POST",
+                body: JSON.stringify({ parentImgToFrames }),
+            });
+            const data = await response.json()
+
             setIsLoading(false)
-            setProcessedImages(response.data.images)
+            setProcessedImages(data.images)
         }
 
         getProcessedImages();
