@@ -28,7 +28,7 @@ export default function Crop() {
 
 
     const connectSocket = usePreviewStore((state) => state.connect)
-    const disconnectSocket = usePreviewStore((state) => state.connect)
+    const disconnectSocket = usePreviewStore((state) => state.disconnect)
 
 
     useEffect(() => {
