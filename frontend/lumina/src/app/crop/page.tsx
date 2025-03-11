@@ -9,6 +9,7 @@ import { ImageFrame } from "@/components/photo-crop";
 import { Check } from "lucide-react";
 import { usePreviewStore } from "@/store/preview-store";
 import { toast } from "@/hooks/use-toast";
+import LoadingScreen from "@/components/loading-screen";
 
 // Refers to the set of images (cropped photos) that have been detected from a given parent image
 interface DetectedImageSet {
@@ -64,7 +65,7 @@ export default function Crop() {
                         body: formData,
                     });
                     const data = await response.json()
-                    
+
 
                     populateImageStore(data.processedResult);
                     setDetectedImageSets(data.processedResult);
@@ -84,8 +85,19 @@ export default function Crop() {
             connectSocket()
         }
 
+
+        // Add unload listener to warn user before leaving page
+        const handleUnload = (event: BeforeUnloadEvent) => {
+            event.preventDefault();
+            event.returnValue = "";
+        }
+        window.addEventListener('beforeunload', handleUnload)
+        
+
+        // Cleanup
         return () => {
             disconnectSocket(); // Disconnect for clean up
+            window.removeEventListener('beforeunload', handleUnload) // Remove unload listener
         }
     }, [])
 
@@ -107,18 +119,7 @@ export default function Crop() {
                 <div className="flex align-middle justify-center mt-4">
                     {loading ?
 
-                        <div className="">
-                            <div className="flex items-center space-x-4">
-                                <div className="space-y-2">
-                                    <Skeleton className="h-40 w-40 rounded-3xl bg-[#e96443]" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Skeleton className="h-44 w-44 rounded-3xl bg-[#4cacaf]" />
-                                    <Skeleton className="h-48 w-48 rounded-3xl bg-[#c94b4b]" />
-                                </div>
-                            </div>
-                            <p className="mt-12 font-medium text-2xl text-center text-black">Cropping...</p>
-                        </div>
+                        <LoadingScreen text="Loading..." />
 
                         :
 

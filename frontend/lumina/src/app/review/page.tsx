@@ -60,6 +60,19 @@ export default function Review() {
 
         getProcessedImages();
 
+
+        // Add unload listener to warn user before leaving page
+        const handleUnload = (event: BeforeUnloadEvent) => {
+            event.preventDefault();
+            event.returnValue = "";
+        }
+        window.addEventListener('beforeunload', handleUnload)
+
+        // Cleanup
+        return () => {
+            window.removeEventListener('beforeunload', handleUnload) // Remove unload listener
+        }
+
     }, [])
 
 
