@@ -37,7 +37,6 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
 
     const containerRef = useRef<HTMLDivElement>(null);
-    const hasRun = useRef<boolean>(false);
     const [expectedPreviewsCount, setExpectedPreviewsCount] = useState<number>(0);
     const [isPreviewLoading, setIsPreviewsLoading] = useState(false);
 
@@ -56,10 +55,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
     // Handle initial canvas load
     useEffect(() => {
-        if (hasRun.current) return; // Prevent double execution // TODO: remove ref check (put in place right now to prevent double useEffect execution)
-        hasRun.current = true;
 
-        console.log("useeffect")
         const url = URL.createObjectURL(parentImageFile);
         setImageUrl(url);
 
