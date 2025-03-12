@@ -72,6 +72,8 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
             const konvasStageWidth = maxWidth;
             const konvasStageHeight = maxWidth * aspectRatio;
             setStageSize({ width: konvasStageWidth, height: konvasStageHeight });
+            console.log("height: " + konvasStageHeight)
+            console.log("width: " + konvasStageWidth)
             setKonvasImage(img);
 
 
@@ -84,8 +86,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
             setStageScale({ xScale: xScale, yScale: yScale }); // Set local state stage scale
 
 
-            console.log("xscale: " + xScale)
-            console.log("yscale: " + yScale)
+            
 
 
             const updatedFrames: ImageFrame[] = []
@@ -243,8 +244,8 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
     return (
 
-        <div className="bg-slate-200 my-4 p-4 rounded-lg flex flex-row">
-            <div ref={containerRef} className="w-1/2">
+        <div className="bg-slate-200 my-4 p-4 rounded-lg flex flex-col lg:flex-row min-w-fit">
+            <div ref={containerRef} className="flex-1">
 
                 <h2 className="text-lg font-semibold">{parentImageFile.name}</h2>
                 <p>{scaledFrames.length} {scaledFrames.length === 1 ? "Frame" : "Frames"}</p>
@@ -299,7 +300,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
             </div>
 
 
-            <div className="w-1/2 px-5 ml-5">
+            <div className="px-5 flex-1">
                 <h2 className="text-lg font-semibold">Previews</h2>
                 <p className="text-sm">Note: Previews do not reflect final image quality</p>
 
