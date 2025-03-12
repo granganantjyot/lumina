@@ -3,7 +3,6 @@ import useFrameStore from "@/store/frame-store";
 import LoadingScreen from "@/components/loading-screen";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { CalendarCog, Check, RotateCw } from "lucide-react";
 
@@ -125,11 +124,11 @@ export default function Review() {
 
 
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-4">
                                 {processedImages.map(({ image, angle, dimensions, date }, index) => {
 
                                     return (
-                                        <div className="bg-slate-200 p-4 rounded-lg" key={index}>
+                                        <div className="bg-slate-200 p-4 rounded-lg w-full" key={index}>
 
 
                                             <div className=" flex flex-row items-center">
@@ -168,7 +167,7 @@ export default function Review() {
 
                                             </div>
 
-                                            <div className="mt-2 flex gap-2">
+                                            <div className="mt-2 flex flex-wrap gap-2">
                                                 <Button className="" onClick={() => {
                                                     const copy = [...processedImages];
                                                     const updated = { ...copy[index], angle: (angle === 270 ? 0 : (angle + 90)) }
