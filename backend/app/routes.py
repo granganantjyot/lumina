@@ -2,13 +2,18 @@ import json
 from textwrap import indent
 from fastapi import UploadFile, APIRouter, Form, Request
 from typing import Annotated
-from processing.corners import get_images_corners
+from processing.corners import get_image_crops
 import os
 import shutil
 from processing.enhance import enhance_parallel
 from processing.manual_rotate import rotate_processed_image
 from processing.update_metadata import apply_date_metadata
 import shutil
+import pillow_heif
+import io
+from PIL import Image
+import numpy as np
+import cv2
 
 router = APIRouter()
 UPLOAD_FOLDER = os.path.join(os.path.dirname(
@@ -19,27 +24,21 @@ UPLOAD_FOLDER = os.path.join(os.path.dirname(
 async def upload(files: list[UploadFile], session_id: Annotated[str, Form()],):
 
     result = []
-    count = 0
+
 
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-    for file in files:
+    for index, file in enumerate(files):
 
+        # use image code as name of file in uploads
+        img_code = session_id + "_" + str(index)
+        
         # Iterate through all files, and get all image frames
-        images_corners = await get_images_corners(file)
-        # use this image code to store the actual image in session storage
-        img_code = session_id + "_" + str(count)
+        images_corners = await get_image_crops(file, UPLOAD_FOLDER, img_code)
         result.append({"parentImgID": img_code, "imageFrames": images_corners})
 
-        # Save the file to uploads
-        file.file.seek(0)
-        file_path = os.path.join(UPLOAD_FOLDER, f"{img_code}.png")
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
 
-        count += 1
-
-    return {"filenames": [file.filename for file in files], "processedResult": result}
+    return {"processedResult": result}
 
 
 @router.post("/api/process")

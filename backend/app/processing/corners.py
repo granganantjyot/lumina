@@ -1,6 +1,14 @@
 import cv2
 import numpy as np
+from fastapi import UploadFile
 
+import pillow_heif
+import io
+from PIL import Image
+import numpy as np
+import cv2
+import os
+import shutil
 
 
 def is_background_dark(grayed_image, border_ratio=0.1, threshold=75): # Threshold can be between 0 - 255 color
@@ -22,13 +30,9 @@ def is_background_dark(grayed_image, border_ratio=0.1, threshold=75): # Threshol
     return mean_border < threshold
 
 
-async def get_images_corners(image_file):
+async def get_images_corners(image):
     print("getting corners")
     
-    contents = await image_file.read()
-    nparr = np.frombuffer(contents, np.uint8)
-    image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
 
     # Convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -108,3 +112,42 @@ async def get_images_corners(image_file):
         extracted_images_coordinates.append(formatted)
 
     return extracted_images_coordinates
+
+
+
+async def get_image_crops(file: UploadFile, UPLOAD_FOLDER: str, img_code: str):
+
+    # get byte contents of file
+    contents = await file.read()
+
+
+    # handle .heic image files separately
+    if (str(file.filename).lower().endswith(".heic")):
+            print(f"converting heic {file.filename}")
+
+            # Convert the heic file into a format that is processable by opencv
+            heif_image = pillow_heif.open_heif(io.BytesIO(contents))
+            pil_image = Image.frombytes(heif_image.mode, heif_image.size, heif_image.data)
+            image_as_array = np.array(pil_image, dtype=np.uint8)
+            processable_file = cv2.cvtColor(image_as_array, cv2.COLOR_RGB2BGR)
+
+            # Save the heic file as png to Uploads
+            file.file.seek(0)
+            file_path = os.path.join(UPLOAD_FOLDER, f"{img_code}.png")
+            pil_image.save(file_path, "png")
+
+    else:
+        # Convert image file into a format that is processable by opencv
+        image_as_array = np.frombuffer(contents, np.uint8)
+        processable_file = cv2.imdecode(image_as_array, cv2.IMREAD_COLOR)
+
+        # Save the image file as png to Uploads
+        file.file.seek(0)
+        file_path = os.path.join(UPLOAD_FOLDER, f"{img_code}.png")
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+
+    # Process the opencv image and get the corner crops
+    images_crops = await get_images_corners(processable_file)
+    return images_crops
