@@ -42,7 +42,7 @@ export default function TryItOutComponent() {
     }
 
     return (
-        <div className="ml-10 mr-10 p-8 pt-16">
+        <div className="ml-10 mr-10 p-8 py-16">
             <h2 className="text-4xl font-semibold  text-white">Try It Out</h2>
             <p className="text-lg w-full text-white  drop-shadow-lg">Upload an image and see the magic</p>
 
