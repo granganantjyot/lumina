@@ -32,7 +32,7 @@ async def socket(websocket):
 
 
 async def main():
-    async with serve(socket, "localhost", 8765):
+    async with serve(socket, "0.0.0.0", 8765):
         print("Starting socket...")
         await asyncio.get_running_loop().create_future()  # run forever
 
