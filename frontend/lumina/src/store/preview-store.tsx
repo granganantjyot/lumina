@@ -28,7 +28,11 @@ export const usePreviewStore = create<PreviewState>()(subscribeWithSelector((set
 
     connect: () => {
         console.log("Connecting to socket...")
-        const imageSocket = new WebSocket("ws://localhost:8765/");
+        const wsUrl = process.env.NEXT_PUBLIC_WS_URL;
+        if (!wsUrl) {
+            throw new Error("WebSocket URL is not defined");
+        }
+        const imageSocket = new WebSocket(wsUrl);
         
 
         imageSocket.onmessage = (event: MessageEvent) => {
