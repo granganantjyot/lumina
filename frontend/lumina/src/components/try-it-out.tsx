@@ -22,7 +22,7 @@ export default function TryItOutComponent() {
 
     const [files, setFiles] = useState<File[]>([]);
 
-    const {setImageCount, setImageFiles, setSessionId} = useFrameStore();
+    const { setImageCount, setImageFiles, setSessionId } = useFrameStore();
 
     function handleStartClick() {
 
@@ -36,7 +36,7 @@ export default function TryItOutComponent() {
             setImageCount(files.length);
             setImageFiles(files);
             setSessionId(uuidv4());
-            
+
             router.push("/crop")
         }
     }
@@ -46,16 +46,43 @@ export default function TryItOutComponent() {
             <h2 className="text-4xl font-semibold  text-white">Try It Out</h2>
             <p className="text-lg w-full text-white  drop-shadow-lg">Upload an image and see the magic</p>
 
-            <div className="flex flex-row mt-5 gap-10 flex-grow justify-between w-full">
-                <UploadComponent onFileUpload={(files: File[]) => {
 
-                    files.forEach((file) => {
-                        console.log(file.name, file.size)
-                    })
 
-                    setFiles(files);
 
-                }} />
+            <div className="flex flex-col lg:flex-row mt-5 gap-10 w-full">
+
+                <div className="sm:w-full lg:w-1/2 flex flex-col">
+                    <UploadComponent onFileUpload={(files: File[]) => {
+
+                        files.forEach((file) => {
+                            console.log(file.name, file.size)
+                        })
+
+                        setFiles(files);
+
+                    }} />
+
+
+
+                    <div className="flex flex-wrap gap-2 mt-2">
+                        <Button onClick={handleStartClick} className={`${files?.length > 0 ? "bg-emerald-700" : ""}`}>
+                            <ImagePlay />Start
+                        </Button>
+
+                        <Button className="">
+                            <Flame />Blaze
+                        </Button>
+
+                        <Button >
+                            <Cog />Options
+                        </Button>
+
+                    </div>
+
+
+
+                </div>
+
 
                 <div className="flex flex-1 flex-col ">
                     <h3 className="text-2xl font-semibold text-white">For Best Results:</h3>
@@ -77,20 +104,9 @@ export default function TryItOutComponent() {
                 </div>
             </div>
 
-            <div className="flex flex-row gap-2 mt-2 ">
-                <Button onClick={handleStartClick} className={`${files?.length > 0 ? "bg-emerald-700" : ""}`}>
-                    <ImagePlay />Start
-                </Button>
 
-                <Button className="">
-                    <Flame />Blaze
-                </Button>
 
-                <Button >
-                    <Cog />Options
-                </Button>
 
-            </div>
 
         </div>
     )
