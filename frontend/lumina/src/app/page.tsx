@@ -51,10 +51,9 @@ export default function Home() {
         <section id="try-it-out" className="-mt-0.5">
           <div
             className="relative w-screen bg-cover bg-no-repeat bg-center"
-            style={{ backgroundImage: "url('/untitled4.svg')" }}>
+            style={{ backgroundImage: "url('/bg-wave.svg')" }}>
 
             
-
             <TryItOutComponent/>
           </div>
         </section>
