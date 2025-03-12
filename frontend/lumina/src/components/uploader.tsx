@@ -12,8 +12,8 @@ interface UploadComponentProps {
 export default function UploadComponent({ className, onFileUpload }: UploadComponentProps) {
     return (
         <Dropzone
-            dropZoneClassName="flex justify-center items-center w-full h-full bg-white border-solid border-[1px] border-white rounded-lg hover:bg-transparent hover:text-white hover:border-white transition-all select-none cursor-pointer"
-            containerClassName={clsx("w-1/2 min-h-56", className)}
+            dropZoneClassName="flex justify-center items-center w-full min-h-56 h-full bg-white border-solid border-[1px] border-white rounded-lg hover:bg-transparent hover:text-white hover:border-white transition-all select-none cursor-pointer"
+            containerClassName={clsx(className)}
             onDrop={(acceptedFiles: File[]) => {
                 onFileUpload(acceptedFiles)
             }}
