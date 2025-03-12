@@ -19,7 +19,7 @@ const features = [
 
 export default function FeaturesComponent({ className }: FeaturesComponentProps) {
     return (
-        <div className={clsx("flex flex-wrap gap-6 w-full justify-center", className)}>
+        <div className={clsx("grid lg:grid-cols-4 md:grid-cols-2 gap-6 w-full justify-center", className)}>
             
 
 
@@ -28,7 +28,7 @@ export default function FeaturesComponent({ className }: FeaturesComponentProps)
                     
                     
                     <CardContent className="flex flex-col aspect-square items-center justify-center p-6 text-center ">
-                        <img src={"/file.svg"} className="aspect-square w-10 mb-5" alt="React Logo" />
+                        <img src={"/file.svg"} className="aspect-square w-10 mb-5" />
 
                         <p className="text-2xl font-semibold" style={{color : f.color}}>{f.name}</p>
                         <p className="mt-1">{f.description}</p>
