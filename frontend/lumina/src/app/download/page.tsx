@@ -82,7 +82,7 @@ export default function Download() {
 
                             <div className="text-center space-y-6">
 
-                                <Image src="/logo.svg" height={200} width={200} className="inline-block" alt="logo" priority />
+                                <Image src="/logo.svg" height={200} width={200} className="inline-block mt-5" alt="logo" priority />
                                 <p className="font-medium text-3xl">
                                     Thank you for using Lumina!</p>
 
