@@ -22,6 +22,8 @@ interface FrameState{
     deleteImageFrame : (parent_img_id : string, index : number) => void;
 
     getTotalFramesCount : () => number;
+
+    clearFrameStore: () => void;
 }   
 
 
@@ -94,8 +96,15 @@ const useFrameStore = create<FrameState>((set, get) => ({
         });
         
         return count;
-    }
+    },
 
+
+    clearFrameStore: () => set(() => ({
+        imageCount : 0,
+        imageFiles : [],
+        sessionId : null,
+        parentImgToFrames : null,
+    }))
 
 
   }))
