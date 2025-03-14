@@ -22,7 +22,7 @@ export default function TryItOutComponent() {
 
     const [files, setFiles] = useState<File[]>([]);
 
-    const { setImageCount, setImageFiles, setSessionId } = useFrameStore();
+    const { setImageCount, setImageFiles, setSessionId, clearFrameStore } = useFrameStore();
 
     function handleStartClick() {
 
@@ -33,6 +33,10 @@ export default function TryItOutComponent() {
 
         // Else store files in image store
         else {
+            // Clear the frame store before beginning a new session 
+            clearFrameStore();
+
+            // Set new data in frame store
             setImageCount(files.length);
             setImageFiles(files);
             setSessionId(uuidv4());
