@@ -20,6 +20,8 @@ interface FrameState{
     addImageFrame : (parent_img_id : string, newFrame : ImageFrame, stageScale: {xScale: number, yScale: number}) => void;
 
     deleteImageFrame : (parent_img_id : string, index : number) => void;
+
+    getTotalFramesCount : () => number;
 }   
 
 
@@ -80,7 +82,19 @@ const useFrameStore = create<FrameState>((set, get) => ({
         return {
             parentImgToFrames: {...state.parentImgToFrames, [parent_img_id] : currFrames}
         }
-    })
+    }),
+
+
+    getTotalFramesCount: () => {
+
+        let count = 0;
+
+        Object.entries(get().parentImgToFrames ?? {}).forEach(([parentImgID, imageFrames]) => {
+            count = count + imageFrames.length;
+        });
+        
+        return count;
+    }
 
 
 
