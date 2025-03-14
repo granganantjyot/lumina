@@ -20,7 +20,7 @@ interface DetectedImageSet {
 export default function Crop() {
 
     const router = useRouter();
-    const { imageFiles, sessionId, parentImgToFrames, setParentImgToFrames } = useFrameStore();
+    const { imageFiles, sessionId, parentImgToFrames, setParentImgToFrames, getTotalFramesCount } = useFrameStore();
 
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -174,7 +174,14 @@ export default function Crop() {
     }
 
     function handleConfirmation() {
-        router.push("/review")
+
+        if (getTotalFramesCount() > 0){
+            router.push("/review")
+        }
+        else{
+            toast({ title: "Add At Least 1 Frame", variant: "destructive" })
+        }
+        
     }
 }
 
