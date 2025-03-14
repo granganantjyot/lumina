@@ -2,7 +2,7 @@ import json
 from textwrap import indent
 from fastapi import UploadFile, APIRouter, Form, Request
 from typing import Annotated
-from processing.corners import get_image_crops
+from processing.corners import get_image_frames
 import os
 import shutil
 from processing.enhance import enhance_parallel
@@ -34,7 +34,7 @@ async def upload(files: list[UploadFile], session_id: Annotated[str, Form()],):
         img_code = session_id + "_" + str(index)
         
         # Iterate through all files, and get all image frames
-        images_corners = await get_image_crops(file, UPLOAD_FOLDER, img_code)
+        images_corners = await get_image_frames(file, UPLOAD_FOLDER, img_code)
         result.append({"parentImgID": img_code, "imageFrames": images_corners})
 
 

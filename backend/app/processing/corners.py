@@ -115,7 +115,7 @@ async def get_images_corners(image):
 
 
 
-async def get_image_crops(file: UploadFile, UPLOAD_FOLDER: str, img_code: str):
+async def get_image_frames(file: UploadFile, UPLOAD_FOLDER: str, img_code: str):
 
     # get byte contents of file
     contents = await file.read()
