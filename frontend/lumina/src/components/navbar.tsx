@@ -4,6 +4,17 @@ import Link from "next/link"
 import { JSX, SVGProps } from "react"
 
 export default function NavBar() {
+
+
+  const navLinks = [
+    { name: "Home", href: "#" },
+    { name: "Features", href: "#features" },
+    { name: "Try It Out", href: "#try-it-out" },
+    { name: "GitHub", href: "#" },
+  ]
+
+
+
   return (
     <header className="flex z-50 h-20 w-full shrink-0 items-center px-10 fixed top-0 bg-slate-400 bg-opacity-25 shadow-lg">
       {/* Mobile */}
@@ -13,57 +24,43 @@ export default function NavBar() {
             <MenuIcon className="h-6 w-6" />
           </Button>
         </SheetTrigger>
+
+
         <SheetContent side="left" className="w-7/12">
           <div className="grid gap-2 py-6">
-            <Link href="#" className="flex w-full items-center py-2 text-lg font-semibold" prefetch={false}>
-              <SheetTitle>Home</SheetTitle>
-            </Link>
-            <Link href="#features" className="flex w-full items-center py-2 text-lg font-semibold" prefetch={false}>
-            <SheetTitle>Features</SheetTitle>
-            </Link>
-            <Link href="#try-it-out" className="flex w-full items-center py-2 text-lg font-semibold" prefetch={false}>
-            <SheetTitle>Try It Out</SheetTitle>
-            </Link>
-            <Link href="#" className="flex w-full items-center py-2 text-lg font-semibold" prefetch={false}>
-            <SheetTitle>GitHub</SheetTitle>
-            </Link>
+
+            {navLinks.map((link, index) => (
+              <Link key={index} href={link.href} className="flex w-full items-center py-2 text-lg font-semibold" prefetch={false}>
+                <SheetTitle>{link.name}</SheetTitle>
+              </Link>
+            ))}
           </div>
         </SheetContent>
       </Sheet>
-      
+
       {/* Main */}
       <Link href="#" className="mr-6 hidden lg:flex" prefetch={false}>
         <h1 className="font-semibold text-xl text-white">Lumina</h1>
       </Link>
+
+
       <nav className="ml-auto hidden lg:flex gap-6 text-white">
-        <Link
-          href="#"
-          className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-base font-semibold transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-          prefetch={false}
-        >
-          Home
-        </Link>
-        <Link
-          href="#features"
-          className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-base font-semibold transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-          prefetch={false}
-        >
-          Features
-        </Link>
-        <Link
-          href="#try-it-out"
-          className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-base font-semibold transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-          prefetch={false}
-        >
-          Try It Out
-        </Link>
-        <Link
-          href="#"
-          className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-base font-semibold transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-          prefetch={false}
-        >
-          GitHub
-        </Link>
+
+        {navLinks.map((link, index) => {
+
+          return (
+            <Link
+              key={index}
+              href={link.href}
+              className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-base font-semibold transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
+              prefetch={false}>
+              {link.name}
+            </Link>
+          )
+
+        })}
+
+
       </nav>
     </header>
   )
