@@ -1,9 +1,26 @@
+"use client";
+
 import { Sheet, SheetTrigger, SheetContent, SheetTitle } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { JSX, SVGProps } from "react"
+import { JSX, SVGProps, useEffect, useState } from "react"
 
 export default function NavBar() {
+
+
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Listen for when user scroll pasts gradient, which takes up whole window height, with offset of 100px
+      if (window.scrollY > window.innerHeight - 100) { setIsScrolled(true) }
+      else { setIsScrolled(false) }
+    }
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  })
 
 
   const navLinks = [
@@ -16,7 +33,7 @@ export default function NavBar() {
 
 
   return (
-    <header className="flex z-50 h-20 w-full shrink-0 items-center px-10 fixed top-0 bg-slate-400 bg-opacity-25 shadow-lg">
+    <header className={`flex z-50  w-full shrink-0 items-center px-10 fixed top-0 bg-opacity-15 backdrop-blur-xl ${isScrolled ? "backdrop-invert-[.20] h-16" : "bg-slate-400  h-20"} shadow-lg transition-all duration-500`}>
       {/* Mobile */}
       <Sheet>
         <SheetTrigger asChild>
