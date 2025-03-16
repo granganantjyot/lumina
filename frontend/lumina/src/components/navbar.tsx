@@ -27,7 +27,7 @@ export default function NavBar() {
     { name: "Home", href: "#" },
     { name: "Features", href: "#features" },
     { name: "Try It Out", href: "#try-it-out" },
-    { name: "GitHub", href: "#" },
+    { name: "How It Works", href: "#how-it-works" },
   ]
 
 
