@@ -2,12 +2,13 @@
 import UploadComponent from "@/components/uploader";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { ImagePlay, Cog, Flame, Loader2 } from "lucide-react"
+import { ImagePlay, Cog, Flame, Loader2, Rocket } from "lucide-react"
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast"
 import useFrameStore from "@/store/frame-store";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from 'uuid';
+import StartDemoComponent from "./start-demo";
 
 
 
@@ -73,13 +74,14 @@ export default function TryItOutComponent() {
                             <ImagePlay />Start
                         </Button>
 
-                        <Button className="">
-                            <Flame />Blaze
-                        </Button>
+                        {files?.length === 0 &&
+                            <StartDemoComponent
+                                trigger={
+                                    <Button>
+                                        <Rocket />Try Demo
+                                    </Button>} />
 
-                        <Button >
-                            <Cog />Options
-                        </Button>
+                        }
 
                     </div>
 
