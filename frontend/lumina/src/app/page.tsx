@@ -1,18 +1,11 @@
 import FeaturesComponent from "@/components/features";
-import UploadComponent from "@/components/uploader";
-import { Button } from "@/components/ui/button";
 import { MeshGradient } from "@blur-ui/mesh-gradient";
-import Image from "next/image";
-import { JSX, SVGProps } from "react";
-import { ImagePlay, Cog, Flame } from "lucide-react"
 import TryItOutComponent from "@/components/try-it-out";
 import NavBar from "@/components/navbar";
+import HowItWorks from "@/components/how-it-works";
 
 
 
-const bestResultsTips = ["Place photos on a plain, neutral-colored surface",
-  "Lay photos completely flat and do not overlap or obstruct", "Position camera directly above photos",
-  "Ensure even, natural lighting conditions", "Capture 2-4 photos in one batch for higher quality output"]
 
 export default function Home() {
   return (
@@ -59,12 +52,20 @@ export default function Home() {
         </section>
 
 
+        {/* How It Works */}
+        <section id="how-it-works" className="mt-10">
 
+          <div
+            className="relative w-screen bg-white"
+            >
 
+            <div className="w-full flex flex-col items-center p-8">
+              <h2 className="text-4xl font-semibold text-center text-black">How It Works</h2>
+              <HowItWorks/>
+            </div>
 
-
-
-
+          </div>
+        </section>
 
 
 
