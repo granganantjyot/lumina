@@ -10,6 +10,8 @@ interface UploadComponentProps {
 }
 
 export default function UploadComponent({ className, onFileUpload }: UploadComponentProps) {
+
+    const maxNumFiles: number = 3;
     return (
         <Dropzone
             dropZoneClassName="flex justify-center items-center w-full min-h-56 h-full bg-white border-solid border-[1px] border-white rounded-lg hover:bg-transparent hover:text-white hover:border-white transition-all select-none cursor-pointer"
@@ -23,12 +25,12 @@ export default function UploadComponent({ className, onFileUpload }: UploadCompo
                 const tooManyFilesError = fileRejections.some(rejection => rejection.errors.some(error => error.code === "too-many-files"));
 
                 // Show toast based on rejection cause
-                if (tooManyFilesError) toast({title : "Maximum 5 Files", variant: "destructive"})
+                if (tooManyFilesError) toast({title : `Maximum ${maxNumFiles} Files`, variant: "destructive"})
                 else toast({title : "Unsupported File(s)", variant: "destructive",})
             }}
 
             maxSize={50 * 1024 * 1024} // 50mb max upload size
-            maxFiles={5}
+            maxFiles={maxNumFiles}
             accept={{ "image/png": [], "image/jpeg": [], "image/jpg": [], "image/heic": [] }}
         >
             {(dropzone: DropzoneState) => (
