@@ -41,15 +41,14 @@ const features = [
 
 export default function FeaturesComponent({ className }: FeaturesComponentProps) {
     return (
-        <div className={clsx("grid lg:grid-cols-4 md:grid-cols-2 gap-6 w-full justify-center", className)}>
-
-
+        <div className={clsx(
+            "grid lg:grid-cols-4 md:grid-cols-2 gap-6 w-full justify-center auto-rows-fr place-items-stretch",
+            className
+        )}>
             {features.map((f, index) => (
-                <Card key={index} className="flex-1 min-w-[200px] max-w-[1/5] shadow-lg">
-
-
-                    <CardContent className="flex flex-col aspect-square items-center justify-center p-6 text-center ">
-                        <div className="mb-5" style={{color: f.color}}>
+                <Card key={index} className="flex flex-col flex-1 min-w-[200px] lg:min-h-[300px] shadow-lg">
+                    <CardContent className="flex flex-col items-center justify-center p-6 text-center h-full">
+                        <div className="mb-5" style={{ color: f.color }}>
                             {f.icon}
                         </div>
                         <p className="text-2xl font-semibold" style={{ color: f.color }}>{f.name}</p>
@@ -57,8 +56,7 @@ export default function FeaturesComponent({ className }: FeaturesComponentProps)
                     </CardContent>
                 </Card>
             ))}
-
-
         </div>
-    )
+    );
 }
+
