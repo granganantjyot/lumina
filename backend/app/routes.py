@@ -1,5 +1,4 @@
 import json
-from textwrap import indent
 from fastapi import UploadFile, APIRouter, Form, Request
 from typing import Annotated
 from processing.corners import get_image_frames
@@ -9,11 +8,6 @@ from processing.enhance import enhance_parallel
 from processing.manual_rotate import rotate_processed_image
 from processing.update_metadata import apply_date_metadata
 import shutil
-import pillow_heif
-import io
-from PIL import Image
-import numpy as np
-import cv2
 
 router = APIRouter()
 UPLOAD_FOLDER = os.path.join(os.path.dirname(
