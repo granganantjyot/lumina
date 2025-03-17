@@ -3,17 +3,10 @@ import useFrameStore from "@/store/frame-store";
 import LoadingScreen from "@/components/loading-screen";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { DownloadIcon } from "lucide-react";
 import Image from "next/image";
-
 import useConfirmedImageStore from "@/store/confirmed-image-store";
-
-
-
-
-
 
 
 
@@ -24,11 +17,7 @@ export default function Download() {
     const [isLoading, setIsLoading] = useState(true);
 
     const confirmedImages = useConfirmedImageStore((state) => state.confirmedImages)
-
     const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
-
-    const [analytics, setAnalytics] = useState<number[]>([])
-
 
 
 
@@ -40,22 +29,24 @@ export default function Download() {
         }
 
 
-        async function getDownloadLink() {
+        // Get download file
+        async function getDownloadFile() {
             const response = await fetch(`/api/confirm/${sessionId}`, {
                 method: "POST",
                 body: JSON.stringify({ finalImages: confirmedImages }),
             });
-            const data = await response.json()
-            
 
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            setDownloadUrl(url);
 
-            setDownloadUrl(data.download);
-            setAnalytics(data.analytics)
+            // Trigger download
+            triggerDownload(url)
 
             setIsLoading(false)
-            window.location.href = data.download
+
         }
-        getDownloadLink()
+        getDownloadFile()
 
     }, [])
 
@@ -89,13 +80,11 @@ export default function Download() {
                                 <p className="">Your download should begin automatically. If it doesn't, click below</p>
 
                                 <Button className="bg-[#4cacaf] p-4 text-base" onClick={() => {
-                                    downloadUrl && (window.location.href = downloadUrl);
+                                    downloadUrl && (triggerDownload(downloadUrl));
                                 }}>
                                     Download <DownloadIcon />
                                 </Button>
 
-                                {/* 0 contains total images processed before, and 1 contains number of images processed in current session */}
-                                <p className="font-medium text-xl">{analytics[0]} <span className="text-[#4cacaf] font-semibold"> +{analytics[1]} </span> Images Processed, And Counting...</p>
                             </div>
                         </div>
                     }
@@ -103,6 +92,16 @@ export default function Download() {
             </main>
         </div>
     );
+
+
+    function triggerDownload(url: string) {
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `lumina_${sessionId}.zip`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    }
 }
 
 
