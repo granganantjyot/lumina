@@ -3,6 +3,7 @@ import { MeshGradient } from "@blur-ui/mesh-gradient";
 import TryItOutComponent from "@/components/try-it-out";
 import NavBar from "@/components/navbar";
 import HowItWorks from "@/components/how-it-works";
+import Image from "next/image";
 
 
 
@@ -46,8 +47,8 @@ export default function Home() {
             className="relative w-screen bg-cover bg-no-repeat bg-center"
             style={{ backgroundImage: "url('/bg-wave.svg')" }}>
 
-            
-            <TryItOutComponent/>
+
+            <TryItOutComponent />
           </div>
         </section>
 
@@ -57,27 +58,27 @@ export default function Home() {
 
           <div
             className="relative w-screen bg-white"
-            >
+          >
 
-            <div className="w-full flex flex-col items-center p-8">
+            <div className="w-full flex flex-col items-center p-8 mb-5">
               <h2 className="text-4xl font-semibold text-center text-black">How It Works</h2>
-              <HowItWorks/>
+              <HowItWorks />
             </div>
 
           </div>
         </section>
-
-
-
-
-
-
-
-
       </main>
 
 
-      
+
+      <footer className="w-full bg-[#31454e] text-white py-4 text-center text-sm">
+        <p className="flex items-center justify-center gap-2">
+          <Image src={"/logo.svg"} alt="Logo" width={20} height={20} />
+          <strong>Lumina</strong> | Helping you relive your memories | Made with ❤️
+        </p>
+      </footer>
+
+
     </div>
   );
 }
