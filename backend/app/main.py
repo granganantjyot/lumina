@@ -2,15 +2,16 @@ from fastapi import FastAPI, File, UploadFile, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from routes import router
+from dotenv import load_dotenv
 import os
 
 
+load_dotenv()
+print(os.getenv("ALLOWED_API_ORIGINS").split(","))
 app = FastAPI()
-
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"], 
+    allow_origins=os.getenv("ALLOWED_API_ORIGINS").split(","), 
     allow_credentials=True,  
     allow_methods=["*"], 
     allow_headers=["*"], 
