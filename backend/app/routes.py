@@ -1,5 +1,6 @@
 import json
 from fastapi import UploadFile, APIRouter, Form, Request
+from fastapi.responses import FileResponse
 from typing import Annotated
 from processing.corners import get_image_frames
 import os
@@ -85,14 +86,11 @@ async def confirm(request: Request):
     print(json.dumps(body, indent=4))
 
 
-    # TODO: Schedule deletion of the zip file after 5 minutes
 
     # Update analytics
-    images_processed = 0
     with open('../analytics.json', 'r+') as f:
         data = json.load(f)
         data["sessions"] += 1
-        images_processed = data["imagesProcessed"]
         data["imagesProcessed"] += len(finalImages)
 
         f.seek(0)
@@ -100,7 +98,10 @@ async def confirm(request: Request):
         f.truncate()
 
 
-
-    return {"download": f"{str(request.base_url)}downloads/lumina_{sessionId}.zip",
-            "analytics": [images_processed, len(finalImages)]
-            }
+    # Return file response
+    file_path = f"../downloads/lumina_{sessionId}.zip"
+    return FileResponse(
+        file_path,
+        filename=f"lumina_{sessionId}.zip",
+        media_type="application/zip",
+    )
