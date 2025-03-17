@@ -3,9 +3,22 @@ import json
 from websockets.asyncio.server import serve
 from websockets.exceptions import ConnectionClosedOK, ConnectionClosedError
 from processing.preview import generate_preview
+from dotenv import load_dotenv
+import os
 
 
 async def socket(websocket):
+
+    # Do not allow connections from unauthorized origin
+    connection_origin = websocket.request.headers.get("Origin", "")
+
+    if connection_origin != os.getenv("ALLOWED_WS_ORIGIN"):
+        print(f"Blocked WebSocket connection from unauthorized origin: {connection_origin}")
+        await websocket.close()
+        return
+    
+    
+    # Process message
     try:
         while True:
             body = await websocket.recv()
@@ -38,4 +51,5 @@ async def main():
 
 
 if __name__ == "__main__":
+    load_dotenv()
     asyncio.run(main())
