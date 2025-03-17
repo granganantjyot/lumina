@@ -318,7 +318,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
                             </button>
                         </div>
                     )) 
-                    : <LoadingSpinner width={10} height={10} fill="#4cacaf"/>}
+                    : <LoadingSpinner width={10} height={10}/>}
 
                 </div>
             </div>

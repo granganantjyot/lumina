@@ -1,10 +1,9 @@
 interface LoadingSpinnerType {
     height: number,
     width: number,
-    fill: string
 }
 
-export default function LoadingSpinner({ height, width, fill }: LoadingSpinnerType) {
+export default function LoadingSpinner({ height, width }: LoadingSpinnerType) {
     return (
         <div role="status" className="w-full flex justify-center">
             <svg aria-hidden="true" className={`inline w-${width} h-${height} text-gray-300 animate-spin fill-main-teal`}
