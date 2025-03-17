@@ -50,7 +50,12 @@ export default {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+			"main-teal": "#4cacaf",
+			"main-orange": "#e96443",
+			"main-red": "#c94b4b",
+			"main-dark": "#31454e"
+
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
