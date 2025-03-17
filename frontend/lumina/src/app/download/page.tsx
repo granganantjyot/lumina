@@ -4,7 +4,7 @@ import LoadingScreen from "@/components/loading-screen";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { DownloadIcon } from "lucide-react";
+import { ChevronRight, DownloadIcon } from "lucide-react";
 import Image from "next/image";
 import useConfirmedImageStore from "@/store/confirmed-image-store";
 
@@ -71,7 +71,7 @@ export default function Download() {
                         :
                         <div className=" w-full">
 
-                            <div className="text-center space-y-6">
+                            <div className="text-center space-y-6 flex flex-col items-center">
 
                                 <Image src="/logo.svg" height={200} width={200} className="inline-block mt-5" alt="logo" priority />
                                 <p className="font-medium text-3xl">
@@ -85,6 +85,13 @@ export default function Download() {
                                     Download <DownloadIcon />
                                 </Button>
 
+
+                                <Button className="p-4 text-base" onClick={() => {
+                                    // Clear history, navigate to home page, try it out section
+                                    window.location.replace("/#try-it-out")
+                                }}>
+                                    Start New Session <ChevronRight />
+                                </Button>
                             </div>
                         </div>
                     }
