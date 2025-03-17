@@ -7,19 +7,19 @@ const steps = [
     {
         title: "Upload Files",
         description: "Upload image files containing multiple physical prints.",
-        icon: <Upload size={24} className="text-[#4cacaf]" />,
+        icon: <Upload size={24} className="text-main-teal" />,
         image: "upload.png",
     },
     {
         title: "Confirm Frames",
         description: "Adjust and confirm detected photos with live previews.",
-        icon: <ImageIcon size={24} className="text-[#e96443]" />,
+        icon: <ImageIcon size={24} className="text-main-orange" />,
         image: "crop.png",
     },
     {
         title: "Download",
         description: "Review metadata and download your processed photos.",
-        icon: <Download size={24} className="text-[#c94b4b]" />,
+        icon: <Download size={24} className="text-main-red" />,
         image: "review.png",
     },
 ];
@@ -57,7 +57,7 @@ export default function HowItWorks() {
             <StartDemoComponent
                 trigger={
                     <div className="flex justify-center mt-10">
-                        <Button className="px-6 py-3 text-lg font-semibold bg-gradient-to-r from-[#4cacaf] to-[#e96443] text-white rounded-lg shadow-lg transition-all ease-in-out transform hover:scale-105 hover:shadow-xl animate-pulse hover:animate-none"
+                        <Button className="px-6 py-3 text-lg font-semibold bg-gradient-to-r from-main-teal to-main-orange text-white rounded-lg shadow-lg transition-all ease-in-out transform hover:scale-105 hover:shadow-xl animate-pulse hover:animate-none"
                         >
                             Try With Sample
                             <ChevronRight className="ml-2 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />

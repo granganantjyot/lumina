@@ -60,7 +60,7 @@ export default function Download() {
 
                 {/* Title + Page Name */}
                 <div>
-                    <h2 className="font-medium text-xl text-[#4cacaf]">Lumina</h2>
+                    <h2 className="font-medium text-xl text-main-teal">Lumina</h2>
                     <h1 className="text-4xl font-semibold text-start mt-2">Download</h1>
                     <p className="text-base">The final step...</p>
                 </div>
@@ -79,7 +79,7 @@ export default function Download() {
 
                                 <p className="">Your download should begin automatically. If it doesn't, click below</p>
 
-                                <Button className="bg-[#4cacaf] p-4 text-base" onClick={() => {
+                                <Button className="bg-main-teal p-4 text-base" onClick={() => {
                                     downloadUrl && (triggerDownload(downloadUrl));
                                 }}>
                                     Download <DownloadIcon />

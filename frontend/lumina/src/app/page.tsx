@@ -16,7 +16,7 @@ export default function Home() {
       <main className="flex flex-col row-start-2 items-center sm:items-start">
 
         {/* Gradient and landing */}
-        <div className="relative w-full h-screen flex items-center justify-center bg-[#c94b4b]">
+        <div className="relative w-full h-screen flex items-center justify-center bg-main-red">
           <MeshGradient className="absolute top-0 left-0 w-full h-full z-0" theme="twilight"></MeshGradient>
           <div className="z-10 flex flex-col">
             <h1 className="text-5xl font-bold w-full text-center text-white drop-shadow-lg px-10 pt-20">Revive, Relive, Restore</h1>
@@ -71,7 +71,7 @@ export default function Home() {
 
 
 
-      <footer className="w-full bg-[#31454e] text-white py-4 text-center text-sm">
+      <footer className="w-full bg-main-dark text-white py-4 text-center text-sm">
         <p className="flex items-center justify-center gap-2">
           <Image src={"/logo.svg"} alt="Logo" width={20} height={20} />
           <strong>Lumina</strong> | Helping you relive your memories | Made with ❤️

@@ -111,7 +111,7 @@ export default function Crop() {
 
                 {/* Title + Page Name */}
                 <div>
-                    <h2 className="font-medium text-xl text-[#4cacaf]">Lumina</h2>
+                    <h2 className="font-medium text-xl text-main-teal">Lumina</h2>
                     <h1 className="text-4xl font-semibold text-start mt-2">Image Cropping</h1>
                     <p className="text-base">Adjust corners of each detected image</p>
                 </div>
@@ -128,7 +128,7 @@ export default function Crop() {
                             <div className="flex justify-between items-center">
                                 <p className="font-semibold">{detectedImageSets?.length} {detectedImageSets?.length === 1 ? "File" : "Files"} Uploaded</p>
 
-                                <Button className="bg-[#4cacaf] p-4 text-base" onClick={handleConfirmation}>
+                                <Button className="bg-main-teal p-4 text-base" onClick={handleConfirmation}>
                                     Looks Good <Check />
                                 </Button>
 

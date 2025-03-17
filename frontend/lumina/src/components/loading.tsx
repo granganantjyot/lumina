@@ -18,11 +18,11 @@ export default function LoadingComponent({loadingText, size} : LoadingComponentT
         <div className="">
             <div className="flex items-center space-x-4">
                 <div className="space-y-2">
-                    <Skeleton className={`${skeletonSize.first} bg-[#e96443]`} />
+                    <Skeleton className={`${skeletonSize.first} bg-main-orange`} />
                 </div>
                 <div className="space-y-2">
-                    <Skeleton className={`${skeletonSize.second} bg-[#4cacaf]`} />
-                    <Skeleton className={`${skeletonSize.third} bg-[#c94b4b]`} />
+                    <Skeleton className={`${skeletonSize.second} bg-main-teal`} />
+                    <Skeleton className={`${skeletonSize.third} bg-main-red`} />
                 </div>
             </div>
             <p className={`${skeletonSize.textMargin} font-medium ${skeletonSize.text} text-center text-black`}>{loadingText}</p>

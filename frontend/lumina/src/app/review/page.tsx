@@ -84,7 +84,7 @@ export default function Review() {
 
                 {/* Title + Page Name */}
                 <div>
-                    <h2 className="font-medium text-xl text-[#c94b4b]">Lumina</h2>
+                    <h2 className="font-medium text-xl text-main-red">Lumina</h2>
                     <h1 className="text-4xl font-semibold text-start mt-2">Review</h1>
                     <p className="text-base">Adjust rotation and metadata</p>
                 </div>
@@ -104,7 +104,7 @@ export default function Review() {
                                     <p className="font-semibold">{processedImages.length} {processedImages.length == 1 ? "Frame" : "Frames"} Generated</p>
                                 </div>
 
-                                <Button className="bg-[#c94b4b] p-4 text-base" onClick={() => {
+                                <Button className="bg-main-red p-4 text-base" onClick={() => {
                                     const images: ConfirmedImage[] = []
 
                                     processedImages.forEach((image, index) => {
