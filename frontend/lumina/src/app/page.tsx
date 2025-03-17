@@ -26,7 +26,7 @@ export default function Home() {
         </div>
 
         {/* Features */}
-        <section id="features" className="mt-10">
+        <section id="features" className="mt-10 scroll-mt-20">
 
           <div
             className="relative w-screen bg-cover bg-no-repeat bg-center"
@@ -42,7 +42,7 @@ export default function Home() {
 
 
         {/* Try It Out */}
-        <section id="try-it-out" className="-mt-0.5">
+        <section id="try-it-out" className="-mt-0.5 scroll-mt-12">
           <div
             className="relative w-screen bg-cover bg-no-repeat bg-center"
             style={{ backgroundImage: "url('/bg-wave.svg')" }}>
@@ -54,7 +54,7 @@ export default function Home() {
 
 
         {/* How It Works */}
-        <section id="how-it-works" className="mt-10">
+        <section id="how-it-works" className="mt-10 scroll-mt-20">
 
           <div
             className="relative w-screen bg-white"
