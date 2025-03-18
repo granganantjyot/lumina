@@ -1,8 +1,14 @@
 "use client";
 import UploadComponent from "@/components/uploader";
 import { Button } from "@/components/ui/button";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 import Image from "next/image";
-import { ImagePlay, Cog, Flame, Loader2, Rocket } from "lucide-react"
+import { ImagePlay, Cog, Flame, Loader2, Rocket, ShieldCheck } from "lucide-react"
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast"
 import useFrameStore from "@/store/frame-store";
@@ -69,7 +75,7 @@ export default function TryItOutComponent() {
 
 
 
-                    <div className="flex flex-wrap gap-2 mt-2">
+                    <div className="flex flex-wrap gap-2 mt-2 items-center">
                         <Button onClick={handleStartClick} className={`${files?.length > 0 ? "bg-emerald-700" : ""}`}>
                             <ImagePlay />Start
                         </Button>
@@ -82,6 +88,21 @@ export default function TryItOutComponent() {
                                     </Button>} />
 
                         }
+
+
+                        <TooltipProvider delayDuration={200}>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <ShieldCheck className="text-white cursor-pointer" />
+                                </TooltipTrigger>
+
+                                <TooltipContent side="right" className="bg-white">
+                                    <p className="text-black font-medium">Uploaded files are not retained.</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+
+
 
                     </div>
 
