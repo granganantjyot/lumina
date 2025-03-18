@@ -4,6 +4,8 @@ import TryItOutComponent from "@/components/try-it-out";
 import NavBar from "@/components/navbar";
 import HowItWorks from "@/components/how-it-works";
 import Image from "next/image";
+import { ChevronDown } from "lucide-react";
+import Link from "next/link"
 
 
 
@@ -11,7 +13,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <div className=" font-[family-name:var(--font-geist-sans)]">
-      <NavBar></NavBar>
+      <NavBar/>
 
       <main className="flex flex-col row-start-2 items-center sm:items-start">
 
@@ -19,10 +21,18 @@ export default function Home() {
         <div className="relative w-full h-screen flex items-center justify-center bg-main-red">
           <MeshGradient className="absolute top-0 left-0 w-full h-full z-0" theme="twilight"></MeshGradient>
           <div className="z-10 flex flex-col">
-            <h1 className="text-5xl font-bold w-full text-center text-white drop-shadow-lg px-10 pt-20">Revive, Relive, Restore</h1>
+            <h1 className="text-5xl font-bold w-full text-center text-white drop-shadow-lg px-10 pt-14">Revive, Relive, Restore</h1>
             <p className="text-lg w-full text-white text-center drop-shadow-lg mt-5 px-16">Digitize physical photographs and prints in a matter of seconds with Lumina</p>
-
           </div>
+
+          {/* Arrow for next section */}
+          <div className="absolute bottom-10 transform cursor-pointer animate-bounce">
+            <Link href="#features">
+              <ChevronDown className="w-10 h-10 text-white" />
+            </Link>
+          </div>
+
+
         </div>
 
         {/* Features */}
