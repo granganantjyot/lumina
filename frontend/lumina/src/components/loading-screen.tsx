@@ -2,10 +2,11 @@ import { Skeleton } from "./ui/skeleton";
 
 
 interface LoadingScreenType{
-    text: string
+    text: string,
+    secondary?: string | null
 }
 
-export default function LoadingScreen({text} : LoadingScreenType) {
+export default function LoadingScreen({text, secondary=null} : LoadingScreenType) {
     return (
         <div className="flex align-middle justify-center mt-4">
             <div className="">
@@ -19,6 +20,7 @@ export default function LoadingScreen({text} : LoadingScreenType) {
                     </div>
                 </div>
                 <p className="mt-12 font-medium text-2xl text-center text-black">{text}</p>
+                {secondary && <p className="mt-2 text-md text-center text-black">{secondary}</p>}
             </div>
 
         </div>
