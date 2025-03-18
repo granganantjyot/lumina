@@ -91,7 +91,7 @@ export default function Review() {
 
                 <div className="flex align-middle justify-center mt-4">
 
-                    {isLoading ? <LoadingScreen text="Generating..." />
+                    {isLoading ? <LoadingScreen text="Generating..." secondary="This can take a few minutes" />
                         :
                         <div className=" w-full">
 
