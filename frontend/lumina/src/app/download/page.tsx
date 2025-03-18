@@ -62,7 +62,7 @@ export default function Download() {
                 <div>
                     <h2 className="font-medium text-xl text-main-teal">Lumina</h2>
                     <h1 className="text-4xl font-semibold text-start mt-2">Download</h1>
-                    <p className="text-base">The final step...</p>
+                    <p className="text-base">The easiest part</p>
                 </div>
 
                 <div className="flex align-middle justify-center mt-4">
