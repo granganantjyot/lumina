@@ -39,6 +39,14 @@ const features = [
 
 ]
 
+// Explicitly reference tailwind colors
+const colorClasses: {[twColor: string] : string} = {
+    "main-teal": "text-main-teal",
+    "main-orange": "text-main-orange",
+    "main-red": "text-main-red",
+    "main-dark": "text-main-dark",
+};
+
 export default function FeaturesComponent({ className }: FeaturesComponentProps) {
     return (
         <div className={clsx(
@@ -48,10 +56,11 @@ export default function FeaturesComponent({ className }: FeaturesComponentProps)
             {features.map((f, index) => (
                 <Card key={index} className="flex flex-col flex-1 min-w-[200px] lg:min-h-[300px] shadow-lg">
                     <CardContent className="flex flex-col items-center justify-center p-6 text-center h-full">
-                        <div className={`mb-5 text-${f.color}`}>
+                        
+                        <div className={`mb-5 ${colorClasses[f.color]}`}>
                             {f.icon}
                         </div>
-                        <p className={`text-2xl font-semibold text-${f.color}`}>{f.name}</p>
+                        <p className={`text-2xl font-semibold ${colorClasses[f.color]}`}>{f.name}</p>
                         <p className="mt-1">{f.description}</p>
                     </CardContent>
                 </Card>
