@@ -8,8 +8,8 @@ const FRAME_COLORS = ["#4cacaf", "#5233b8", "#89c91a", "#c94b4b"];
 interface ImageFrameEditorType {
     imageFrame: ImageFrame,
     frameNumber: number,
-    onDrag: Function,
-    onDragFinished: Function,
+    onDrag: (corner: keyof ImageFrame, position: [number, number]) => void,
+    onDragFinished: () => void,
     stageSize : {width : number, height : number} // [width, height]
 }
 
@@ -52,7 +52,7 @@ export default function ImageFrameEditor({ imageFrame, frameNumber, onDrag, onDr
                             dragDistance={1}
                             draggable
                             onDragMove={(event) => handleDragMovement(event, key)}
-                            onDragEnd={(event) => {onDragFinished()}}
+                            onDragEnd={() => {onDragFinished()}}
                         />
                     )
                 })
