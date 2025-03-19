@@ -30,18 +30,18 @@ interface FrameState{
 
 const useFrameStore = create<FrameState>((set, get) => ({
     imageCount : 0,
-    setImageCount : (newCount : number) => set((state) => ({imageCount : newCount})),
+    setImageCount : (newCount : number) => set(() => ({imageCount : newCount})),
 
 
     imageFiles : [],
-    setImageFiles : (files : File[]) => set((state) => ({imageFiles : files})),
+    setImageFiles : (files : File[]) => set(() => ({imageFiles : files})),
 
     sessionId : null,
-    setSessionId : (id : string) => set((state) => ({sessionId : id})),
+    setSessionId : (id : string) => set(() => ({sessionId : id})),
 
 
     parentImgToFrames : null,
-    setParentImgToFrames: (mappings : {[parentImgID: string] : ImageFrame[]}) => set((state) => ({parentImgToFrames : mappings})),
+    setParentImgToFrames: (mappings : {[parentImgID: string] : ImageFrame[]}) => set(() => ({parentImgToFrames : mappings})),
 
     updateImageFrame: (parent_img_id : string, index : number, newFrame : ImageFrame, stageScale: {xScale: number, yScale: number}) => set((state) => {
         
@@ -91,7 +91,7 @@ const useFrameStore = create<FrameState>((set, get) => ({
 
         let count = 0;
 
-        Object.entries(get().parentImgToFrames ?? {}).forEach(([parentImgID, imageFrames]) => {
+        Object.entries(get().parentImgToFrames ?? {}).forEach(([, imageFrames]) => {
             count = count + imageFrames.length;
         });
         

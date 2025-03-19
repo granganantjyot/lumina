@@ -107,7 +107,7 @@ export default function Review() {
                                 <Button className="bg-main-red p-4 text-base" onClick={() => {
                                     const images: ConfirmedImage[] = []
 
-                                    processedImages.forEach((image, index) => {
+                                    processedImages.forEach((image) => {
                                         images.push({ imageID: image.imageID, angle: image.angle, date: image.date, parentImageID: image.parentImageID })
                                     })
 

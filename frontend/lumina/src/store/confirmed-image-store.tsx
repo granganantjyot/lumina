@@ -20,7 +20,7 @@ const useConfirmedImageStore = create<ConfirmedImageState>((set) => ({
 
     confirmedImages: null,
 
-    setConfirmedImages: (newImages : ConfirmedImage[]) => set((state) => ({confirmedImages: newImages}))
+    setConfirmedImages: (newImages : ConfirmedImage[]) => set(() => ({confirmedImages: newImages}))
 
 }))
 
