@@ -81,8 +81,8 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
             const parentImageWidth = img.width
             const parentImageHeight = img.height
 
-            let xScale = konvasStageWidth / parentImageWidth;
-            let yScale = konvasStageHeight / parentImageHeight;
+            const xScale = konvasStageWidth / parentImageWidth;
+            const yScale = konvasStageHeight / parentImageHeight;
             setStageScale({ xScale: xScale, yScale: yScale }); // Set local state stage scale
 
 
@@ -189,7 +189,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
         }
         else {
             // Else subscribe to changes in preview store, and update expectedPreviewsCount only after store is updated (to avoid race condition)
-            const unsubscribe = usePreviewStore.subscribe((state) => {
+            const unsubscribe = usePreviewStore.subscribe(() => {
                 setExpectedPreviewsCount((current) => current - 1) // Decrement
                 unsubscribe();
             });
@@ -210,7 +210,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
         // Rescale a copy imageFrames, to fit onto the stage
         const originalFrames = []
 
-        for (let frame of imageFrames) {
+        for (const frame of imageFrames) {
 
             const rescaledFrame: ImageFrame = {
                 tl: [...frame.tl],
