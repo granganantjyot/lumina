@@ -3,7 +3,6 @@ import useFrameStore from "@/store/frame-store";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import PhotoCropComponent from "@/components/photo-crop";
 import { ImageFrame } from "@/components/photo-crop";
 import { Check } from "lucide-react";

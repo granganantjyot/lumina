@@ -8,7 +8,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import Image from "next/image";
-import { ImagePlay, Cog, Flame, Loader2, Rocket, ShieldCheck } from "lucide-react"
+import { ImagePlay, Rocket, ShieldCheck } from "lucide-react"
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast"
 import useFrameStore from "@/store/frame-store";
