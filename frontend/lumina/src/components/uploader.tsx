@@ -1,12 +1,12 @@
 "use client";
 import Dropzone, { DropzoneState } from 'shadcn-dropzone';
-import { toast, useToast } from "@/hooks/use-toast"
+import { toast } from "@/hooks/use-toast"
 import clsx from "clsx";
 
 
 interface UploadComponentProps {
     className?: string;
-    onFileUpload : Function;
+    onFileUpload : (acceptedFiles: File[]) => void;
 }
 
 export default function UploadComponent({ className, onFileUpload }: UploadComponentProps) {
