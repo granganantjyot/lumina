@@ -57,9 +57,11 @@ export default function Crop() {
                 try {
                     const formData = new FormData();
                     imageFiles.forEach((file) => { formData.append("files", file) })
+                    formData.append("session_id", sessionId ?? "");
 
-
-                    const response = await fetch(`/api/upload/${sessionId}`, {
+                    
+                    // Request will be proxied, specified in next.config.ts
+                    const response = await fetch(`/api/upload/`, {
                         method: "POST",
                         body: formData,
                     });
