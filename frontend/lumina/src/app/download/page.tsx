@@ -77,10 +77,12 @@ export default function Download() {
                                 <p className="font-medium text-3xl">
                                     Thank you for using Lumina!</p>
 
-                                <p className="">Your download should begin automatically. If it doesn't, click below</p>
+                                <p className="">Your download should begin automatically. If it does not, click below</p>
 
                                 <Button className="bg-main-teal p-4 text-base" onClick={() => {
-                                    downloadUrl && (triggerDownload(downloadUrl));
+                                    if (downloadUrl) {
+                                        triggerDownload(downloadUrl);
+                                    }
                                 }}>
                                     Download <DownloadIcon />
                                 </Button>
