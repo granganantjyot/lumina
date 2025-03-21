@@ -11,7 +11,9 @@ interface UploadComponentProps {
 
 export default function UploadComponent({ className, onFileUpload }: UploadComponentProps) {
 
-    const maxNumFiles: number = 3;
+    const maxNumFiles: number = 3; // 3 files max
+    const maxFileSize: number = 20; // 20mb per file max
+
     return (
         <Dropzone
             dropZoneClassName="flex justify-center items-center w-full min-h-56 h-full bg-white border-solid border-[1px] border-white rounded-lg hover:bg-transparent hover:text-white hover:border-white transition-all select-none cursor-pointer"
@@ -29,7 +31,7 @@ export default function UploadComponent({ className, onFileUpload }: UploadCompo
                 else toast({title : "Unsupported File(s)", variant: "destructive",})
             }}
 
-            maxSize={50 * 1024 * 1024} // 50mb max upload size
+            maxSize={maxFileSize * 1024 * 1024} 
             maxFiles={maxNumFiles}
             accept={{ "image/png": [], "image/jpeg": [], "image/jpg": [], "image/heic": [] }}
         >
@@ -42,7 +44,7 @@ export default function UploadComponent({ className, onFileUpload }: UploadCompo
                                 <div className='flex items-center flex-col gap-1.5  px-6'>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-upload mr-2 h-4 w-4"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg>
                                     <p className="text-sm font-medium text-center">Drop Files or Click to Browse</p>
-                                    <p className="text-xs font-medium text-center">png, jpg, jpg, heic (50 MB Max)</p>
+                                    <p className="text-xs font-medium text-center">png, jpg, jpg, heic ({maxFileSize} MB Max Per File)</p>
                                     <p className="text-xs text-center">{dropzone.acceptedFiles.map((file) => file.name).join(", ")}</p>
                                 </div>
                             )
