@@ -25,9 +25,12 @@ export default function UploadComponent({ className, onFileUpload }: UploadCompo
             onDropRejected={(fileRejections) => {
                 // Check if rejection cause was too many files
                 const tooManyFilesError = fileRejections.some(rejection => rejection.errors.some(error => error.code === "too-many-files"));
+                const tooLargeFileError = fileRejections.some(rejection => rejection.errors.some(error => error.code === "file-too-large"));
+
 
                 // Show toast based on rejection cause
                 if (tooManyFilesError) toast({title : `Maximum ${maxNumFiles} Files`, variant: "destructive"})
+                else if (tooLargeFileError) toast({title : `Maximum ${maxFileSize} MB Per File`, variant: "destructive"})
                 else toast({title : "Unsupported File(s)", variant: "destructive",})
             }}
 
