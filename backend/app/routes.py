@@ -83,8 +83,6 @@ async def confirm(request: Request):
     if os.path.exists(processed_images_path):
         shutil.rmtree(processed_images_path)
 
-    print(json.dumps(body, indent=4))
-
 
 
     # Update analytics
