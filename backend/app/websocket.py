@@ -40,14 +40,6 @@ async def process_messages():
 
 async def socket(websocket):
 
-    # Do not allow connections from unauthorized origin
-    connection_origin = websocket.request.headers.get("Origin", "")
-
-    if connection_origin not in os.getenv("ALLOWED_WS_ORIGINS").split(","):
-        print(f"Blocked WebSocket connection from unauthorized origin: {connection_origin}")
-        await websocket.close()
-        return
-
     # Process message
     try:
         while True:
