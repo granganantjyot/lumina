@@ -59,6 +59,8 @@ def enhance(args):
 
     parent_img_id, corners, sessionId = args
 
+    print(f"Processing: {parent_img_id}")
+
     image = cv2.imread(f"../uploads/{parent_img_id}.png")
 
     # Convert corners to float32
