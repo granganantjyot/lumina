@@ -9,6 +9,7 @@ import useFrameStore from "@/store/frame-store";
 import { usePreviewStore } from "@/store/preview-store";
 import { useShallow } from 'zustand/react/shallow'
 import LoadingSpinner from "./loading-spinner";
+import { toast } from "@/hooks/use-toast";
 
 
 export interface ImageFrame { // contains all 4 corners of the extracted image
@@ -148,6 +149,12 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
     }, [])
 
     function handleAddFrame() {
+        // Only allow maximum 4 frames per image
+        if (scaledFrames.length === 4){
+            toast({ title: "Maximum 4 Frames Per Image File", variant: "destructive", })
+            return;
+        }
+
         // Add a 100 x 100 frame in the middle. First compute the coordinates of the top-left (tl) corner
         const x = (stageSize.width - 100) / 2
         const y = (stageSize.height - 100) / 2
