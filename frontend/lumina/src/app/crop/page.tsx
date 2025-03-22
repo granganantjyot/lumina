@@ -61,7 +61,7 @@ export default function Crop() {
 
                     
                     // Request will be proxied, specified in next.config.ts
-                    const response = await fetch(`/api/upload/`, {
+                    const response = await fetch(`/api/upload`, {
                         method: "POST",
                         body: formData,
                     });
