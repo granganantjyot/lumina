@@ -150,4 +150,11 @@ async def get_image_frames(file: UploadFile, UPLOAD_FOLDER: str, img_code: str):
 
     # Process the opencv image and get the corner crops
     images_crops = await get_images_corners(processable_file)
+
+
+    # If more than 4 crops detected, only return the first 4 (limit)
+    if len(images_crops) > 4:
+        images_crops = images_crops[:4]
+    
+    
     return images_crops
