@@ -18,9 +18,9 @@ import StartDemoComponent from "./start-demo";
 
 
 
-const bestResultsTips = ["Place photos on a plain, neutral-colored surface",
-    "Lay photos completely flat and do not overlap or obstruct", "Position camera directly above photos",
-    "Ensure even, natural lighting conditions", "Capture 2-4 photos in one batch for higher quality output"]
+const bestResultsTips = ["Place photos on a plain, light-colored surface",
+    "Spread out photos (do not overlap or obstruct)", "Position camera directly above photos",
+    "Ensure even, natural lighting conditions", "Capture 2-4 photos in one batch"]
 
 
 export default function TryItOutComponent() {
