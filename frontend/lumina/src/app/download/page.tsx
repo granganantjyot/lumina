@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight, DownloadIcon } from "lucide-react";
 import Image from "next/image";
 import useConfirmedImageStore from "@/store/confirmed-image-store";
+import { toast } from "@/hooks/use-toast";
 
 
 
@@ -31,19 +32,34 @@ export default function Download() {
 
         // Get download file
         async function getDownloadFile() {
-            const response = await fetch(`/api/confirm/${sessionId}`, {
-                method: "POST",
-                body: JSON.stringify({ finalImages: confirmedImages }),
-            });
+            try {
 
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            setDownloadUrl(url);
+                const response = await fetch(`/api/confirm/${sessionId}`, {
+                    method: "POST",
+                    body: JSON.stringify({ finalImages: confirmedImages }),
+                });
 
-            // Trigger download
-            triggerDownload(url)
+                // Handle errors
+                if (!response.ok) {
+                    throw new Error(`An Error Occurred (Status ${response.status})`);
+                }
 
-            setIsLoading(false)
+                // Get file response as blob
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                setDownloadUrl(url);
+
+                
+                // Trigger download
+                triggerDownload(url)
+                setIsLoading(false)
+
+            } catch (error) {
+                console.log(error);
+                toast({ title: "A Server Error Occurred", variant: "destructive", })
+                router.push("/");
+
+            }
 
         }
         getDownloadFile()
