@@ -65,8 +65,14 @@ export default function Crop() {
                         method: "POST",
                         body: formData,
                     });
-                    const data = await response.json()
 
+                    // Handle errors
+                    if (!response.ok) {
+                        throw new Error(`An Error Occurred (Status ${response.status})`);
+                    }
+
+                    // Get json data
+                    const data = await response.json()
 
                     populateImageStore(data.processedResult);
                     setDetectedImageSets(data.processedResult);
@@ -74,7 +80,7 @@ export default function Crop() {
 
                 } catch (error) {
                     console.log(error);
-                    toast({ title: "An Error Occurred", variant: "destructive", })
+                    toast({ title: "A Server Error Occurred", variant: "destructive", })
                     router.push("/");
                 }
 
