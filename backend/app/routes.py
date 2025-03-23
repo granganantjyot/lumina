@@ -1,5 +1,5 @@
 import json
-from fastapi import UploadFile, APIRouter, Form, Request
+from fastapi import UploadFile, APIRouter, Form, Request, BackgroundTasks
 from fastapi.responses import FileResponse
 from typing import Annotated
 from processing.corners import get_image_frames
@@ -53,7 +53,7 @@ async def process(request: Request):
 
 
 @router.post("/api/confirm")
-async def confirm(request: Request):
+async def confirm(request: Request, background_tasks: BackgroundTasks):
 
     body = await request.json()
     finalImages = body["finalImages"]
@@ -98,6 +98,8 @@ async def confirm(request: Request):
 
     # Return file response
     file_path = f"../downloads/lumina_{sessionId}.zip"
+    background_tasks.add_task(lambda: os.remove(file_path) if os.path.exists(file_path) else None) # Add download file removal in background task (executes after file response is sent)
+    
     return FileResponse(
         file_path,
         filename=f"lumina_{sessionId}.zip",
