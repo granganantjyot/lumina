@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routes import router
 from dotenv import load_dotenv
 import os
+import uvicorn
 
 
 load_dotenv()
@@ -24,3 +25,5 @@ async def root():
     return {"message": "Working as expected :)"}
 
 
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("API_PORT")), workers=1)
