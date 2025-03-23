@@ -11,7 +11,8 @@ import { format } from "date-fns"
 import DatePicker from "@/components/date-picker";
 
 import useConfirmedImageStore from "@/store/confirmed-image-store";
-import {ConfirmedImage} from "@/store/confirmed-image-store";
+import { ConfirmedImage } from "@/store/confirmed-image-store";
+import { toast } from "@/hooks/use-toast";
 
 
 
@@ -47,14 +48,28 @@ export default function Review() {
 
         // Backend query
         async function getProcessedImages() {
-            const response = await fetch(`/api/process/${sessionId}`, {
-                method: "POST",
-                body: JSON.stringify({ parentImgToFrames }),
-            });
-            const data = await response.json()
+            try {
+                const response = await fetch(`/api/process/${sessionId}`, {
+                    method: "POST",
+                    body: JSON.stringify({ parentImgToFrames }),
+                });
 
-            setIsLoading(false)
-            setProcessedImages(data.images)
+                // Handle errors
+                if (!response.ok) {
+                    throw new Error(`An Error Occurred (Status ${response.status})`);
+                }
+
+                // Get json data
+                const data = await response.json()
+
+                setProcessedImages(data.images)
+                setIsLoading(false)
+
+            } catch (error) {
+                console.log(error);
+                toast({ title: "An Error Occurred. Please Try Again Later.", variant: "destructive", })
+                router.push("/");
+            }
         }
 
         getProcessedImages();
@@ -187,13 +202,13 @@ export default function Review() {
                                                     }
                                                     onDateSelect={
                                                         (selected) => {
-                                                            
+
 
                                                             // Update date of image
                                                             const copy = [...processedImages];
                                                             const updated = { ...copy[index], date: format(selected, "yyyy-MM-dd") }
 
-                                                            
+
                                                             copy[index] = updated;
                                                             setProcessedImages(copy)
 
