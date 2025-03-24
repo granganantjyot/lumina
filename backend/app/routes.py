@@ -86,14 +86,17 @@ async def confirm(request: Request, background_tasks: BackgroundTasks):
 
 
     # Update analytics
-    with open('../analytics.json', 'r+') as f:
-        data = json.load(f)
-        data["sessions"] += 1
-        data["imagesProcessed"] += len(finalImages)
+    try:
+        with open('../analytics.json', 'r+') as f:
+            data = json.load(f)
+            data["sessions"] += 1
+            data["imagesProcessed"] += len(finalImages)
 
         f.seek(0)
         json.dump(data, f, indent=4)
         f.truncate()
+    except:
+        print("no analytics.json file found")
 
 
     # Return file response
