@@ -18,6 +18,8 @@ export default function Download() {
     const [isLoading, setIsLoading] = useState(true);
 
     const confirmedImages = useConfirmedImageStore((state) => state.confirmedImages)
+    const clearFrameStore = useFrameStore((state) => state.clearFrameStore);
+
     const [downloadUrl, setDownloadUrl] = useState<string | null>(null)
 
 
@@ -63,6 +65,10 @@ export default function Download() {
 
         }
         getDownloadFile()
+
+
+        // Clear state store
+        clearFrameStore()
 
     }, [])
 
