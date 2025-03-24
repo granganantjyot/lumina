@@ -1,4 +1,5 @@
 import { ImageFrame } from "@/components/photo-crop";
+import { base64ImageToBlob } from "@/lib/utils";
 import { create } from "zustand";
 import { subscribeWithSelector } from 'zustand/middleware'
 
@@ -6,7 +7,7 @@ import { subscribeWithSelector } from 'zustand/middleware'
 interface PreviewState {
     socket: WebSocket | null // Websocket
 
-    activePreviews: {[parentImageID: string] : string[]} // Map parent img ID, to array of base64 string images
+    activePreviews: {[parentImageID: string] : string[]} // Map parent img ID, to array of blob urls (representing the preview images)
 
     connect: () => void // Used to make initial websocket connection
 
@@ -39,13 +40,20 @@ export const usePreviewStore = create<PreviewState>()(subscribeWithSelector((set
             const response = JSON.parse(event.data);
 
             set((state) => {
-                // Get current previews for the specific parentImageID
-                const currentPreviews = state.activePreviews[response.parentImageID] || [];
                 
+                // Get current active previews for the specific parentImageID
+                const currentPreviews = state.activePreviews[response.parentImageID] || [];
 
-                // Create copy of these previews, and update at the relevant index
+                // Revoke old blob url for the current active preview at specified index
+                const oldUrl = currentPreviews?.[response.index];
+                if(oldUrl){
+                    URL.revokeObjectURL(oldUrl)
+                }
+
+
+                // Create copy of current previews, and update new blob url at the specified index
                 const updatedPreviews = [...currentPreviews]; 
-                updatedPreviews[response.index] = response.image; 
+                updatedPreviews[response.index] = URL.createObjectURL(base64ImageToBlob(response.image)); 
 
                 // Update store state for active previews
                 return {activePreviews: {...state.activePreviews, [response.parentImageID] : updatedPreviews}}
