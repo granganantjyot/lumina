@@ -4,7 +4,7 @@ import LoadingScreen from "@/components/loading-screen";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { CalendarCog, Check, RotateCw } from "lucide-react";
+import { Calendar, CalendarCog, Check, RotateCw } from "lucide-react";
 
 import { format } from "date-fns"
 
@@ -119,20 +119,49 @@ export default function Review() {
                                     <p className="font-semibold">{processedImages.length} {processedImages.length == 1 ? "Frame" : "Frames"} Generated</p>
                                 </div>
 
-                                <Button className="bg-main-red p-4 text-base" onClick={() => {
-                                    const images: ConfirmedImage[] = []
-
-                                    processedImages.forEach((image) => {
-                                        images.push({ imageID: image.imageID, angle: image.angle, date: image.date, parentImageID: image.parentImageID })
-                                    })
 
 
-                                    setImages(processedImages)
-                                    router.push("/download")
 
-                                }}>
-                                    Looks Good <Check />
-                                </Button>
+
+                                <div className="flex gap-2 flex-wrap justify-end">
+
+                                    {/* Button to apply a given date to all images' metadata */}
+                                    <DatePicker
+                                        triggerChild={
+                                            <Button className="p-4 text-base bg-gray-700">
+                                                Change All <Calendar />
+                                            </Button>
+                                        }
+                                        onDateSelect={
+                                            (selected) => {
+                                                console.log(selected)
+
+                                                // Update date of all images
+                                                const copy = [...processedImages];
+                                                copy.forEach((img) => img.date = format(selected, "yyyy-MM-dd"))
+
+                                                setProcessedImages(copy)
+
+                                            }} />
+
+
+                                    
+                                    {/* Proceed and confirm */}
+                                    <Button className="bg-main-red p-4 text-base" onClick={() => {
+                                        const images: ConfirmedImage[] = []
+
+                                        processedImages.forEach((image) => {
+                                            images.push({ imageID: image.imageID, angle: image.angle, date: image.date, parentImageID: image.parentImageID })
+                                        })
+
+
+                                        setImages(processedImages)
+                                        router.push("/download")
+
+                                    }}>
+                                        Looks Good <Check />
+                                    </Button>
+                                </div>
 
                             </div>
 
