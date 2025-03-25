@@ -8,6 +8,7 @@ WORKDIR /backend/app
 RUN apt-get update && apt-get install -y \
     cmake \
     libgl1 \
+    supervisor \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy pip requirements.txt
@@ -22,8 +23,11 @@ COPY app /backend/app
 # Copy the .env file into the container
 COPY .env /backend/.env
 
+# Copy Supervisor configuration file
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 # Expose ports
 EXPOSE 8000 8765
 
-# Run both services
-CMD ["sh", "-c", "python3 main.py & python3 websocket.py && wait"]
+# Start Supervisor (which runs both processes for api and socket)
+CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
