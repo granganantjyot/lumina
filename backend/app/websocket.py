@@ -18,7 +18,7 @@ async def process_messages():
         websocket, body = await global_queue.get()
 
         try:
-            print(f"executing {body["index"]} of {body["parentImageID"]}")
+            print(f"executing {body["index"]} of {body["parentImageID"]}", flush=True)
 
             # Generate preview 
             res = generate_preview(body["parentImageID"], body["frame"])
@@ -31,9 +31,9 @@ async def process_messages():
 
 
             await websocket.send(json.dumps(response))
-            print("Sent response")
+            print("Sent response", flush=True)
         except Exception as e:
-            print(f"Error processing message: {e}")
+            print(f"Error processing message: {e}", flush=True)
         finally:
             global_queue.task_done()  # Mark task as complete
 
@@ -48,13 +48,13 @@ async def socket(websocket):
 
             await global_queue.put((websocket, body))
 
-            print("sent")
+            print("sent", flush=True)
 
     except (ConnectionClosedOK, ConnectionClosedError) as e:
-        print(f"Client disconnected: {e}")
+        print(f"Client disconnected: {e}", flush=True)
 
     except Exception as e:
-        print(f"Websocket error: {e}")
+        print(f"Websocket error: {e}", flush=True)
 
     finally:
         await websocket.close()
@@ -63,7 +63,7 @@ async def socket(websocket):
 async def main():
     asyncio.create_task(process_messages())
     async with serve(socket, "0.0.0.0", os.getenv("WS_PORT")):
-        print("Starting socket...")
+        print("Starting socket...", flush=True)
         await asyncio.Future()  # run forever
 
 
