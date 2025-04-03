@@ -92,9 +92,9 @@ async def confirm(request: Request, background_tasks: BackgroundTasks):
             data["sessions"] += 1
             data["imagesProcessed"] += len(finalImages)
 
-        f.seek(0)
-        json.dump(data, f, indent=4)
-        f.truncate()
+            f.seek(0)
+            json.dump(data, f, indent=4)
+            f.truncate()
     except:
         print("no analytics.json file found")
 
