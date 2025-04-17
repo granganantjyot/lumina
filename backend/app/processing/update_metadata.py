@@ -20,6 +20,7 @@ def apply_date_metadata(session_id, image_id, date_string):
     
 def apply_exif_metadata(image_path, date):
     formatted = datetime(date.year, date.month, date.day, 0, 0, 0)
+    formatted = formatted.strftime("%Y:%m:%d %H:%M:%S")
 
     with open(image_path, 'rb') as file:
         img_bytes = file.read()
