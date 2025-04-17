@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Lumina",
-  description: "Lumina app",
+  description: "Lumina digitizes your physical photos and memorizes in seconds.",
 };
 
 export default function RootLayout({
