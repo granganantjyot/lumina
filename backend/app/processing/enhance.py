@@ -61,7 +61,7 @@ def enhance(args):
 
     print(f"Processing: {parent_img_id}")
 
-    image = cv2.imread(f"../uploads/{parent_img_id}.png")
+    image = cv2.imread(f"../uploads/{parent_img_id}.jpg")
 
     # Convert corners to float32
     src_points = np.array([
@@ -101,19 +101,19 @@ def enhance(args):
     image_id = str(uuid.uuid4())
     warped_image = cv2.cvtColor(warped_image, cv2.COLOR_BGR2RGB)
     child_img = Image.fromarray(warped_image)
-    parent_img = Image.open(f"../uploads/{parent_img_id}.png")
+    parent_img = Image.open(f"../uploads/{parent_img_id}.jpg")
     # Save with icc profile of original parent image
-    child_img.save(f"{output_dir}/{image_id}.png",
+    child_img.save(f"{output_dir}/{image_id}.jpg",
                    icc_profile=parent_img.info.get('icc_profile'))
 
     # Apply enhancements, generate preview
-    enhanced_img = apply_filter_enhancements(f"{output_dir}/{image_id}.png")
+    enhanced_img = apply_filter_enhancements(f"{output_dir}/{image_id}.jpg")
     _, buffer = cv2.imencode(".jpg", enhanced_img, [
                              cv2.IMWRITE_JPEG_QUALITY, 80])
 
     # Upscale image and save it
     upscaled_img = upscale(enhanced_img)
-    cv2.imwrite(f"{output_dir}/{image_id}.png", upscaled_img)
+    cv2.imwrite(f"{output_dir}/{image_id}.jpg", upscaled_img)
 
     return {
         "angle": angle,

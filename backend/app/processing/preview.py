@@ -5,7 +5,7 @@ import numpy as np
 from processing import auto_rotate
 
 def generate_preview(parent_img_id, corners):
-    image = cv2.imread(f"../uploads/{parent_img_id}.png")
+    image = cv2.imread(f"../uploads/{parent_img_id}.jpg")
 
     # Convert corners to float32
     src_points = np.array([

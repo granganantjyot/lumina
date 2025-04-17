@@ -5,7 +5,7 @@ from datetime import datetime
 
 def apply_date_metadata(session_id, image_id, date_string):
     print(date_string)
-    image_path = f"../processed_images/{session_id}/{image_id}.png"
+    image_path = f"../processed_images/{session_id}/{image_id}.jpg"
 
     date = datetime.strptime(date_string, "%Y-%m-%d")
 

@@ -133,8 +133,8 @@ async def get_image_frames(file: UploadFile, UPLOAD_FOLDER: str, img_code: str):
 
             # Save the heic file as png to Uploads
             file.file.seek(0)
-            file_path = os.path.join(UPLOAD_FOLDER, f"{img_code}.png")
-            pil_image.save(file_path, "png")
+            file_path = os.path.join(UPLOAD_FOLDER, f"{img_code}.jpg")
+            pil_image.save(file_path, "jpeg", quality=98)
 
     else:
         # Convert image file into a format that is processable by opencv
@@ -142,10 +142,9 @@ async def get_image_frames(file: UploadFile, UPLOAD_FOLDER: str, img_code: str):
         processable_file = cv2.imdecode(image_as_array, cv2.IMREAD_COLOR)
 
         # Save the image file as png to Uploads
-        file.file.seek(0)
-        file_path = os.path.join(UPLOAD_FOLDER, f"{img_code}.png")
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
+        pil_image = Image.fromarray(cv2.cvtColor(processable_file, cv2.COLOR_BGR2RGB))
+        file_path = os.path.join(UPLOAD_FOLDER, f"{img_code}.jpg")
+        pil_image.save(file_path, "JPEG", quality=98)
 
 
     # Process the opencv image and get the corner crops
