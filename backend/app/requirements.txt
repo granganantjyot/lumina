@@ -7,6 +7,7 @@ cmake==3.31.4
 dlib==19.24.6
 dnspython==2.7.0
 email_validator==2.2.0
+exif==1.6.1
 fastapi==0.115.7
 fastapi-cli==0.0.7
 h11==0.14.0
@@ -23,6 +24,7 @@ opencv-contrib-python==4.11.0.86
 opencv-python==4.11.0.86
 pillow==11.1.0
 pillow_heif==0.21.0
+plum-py==0.8.7
 pycparser==2.22
 pydantic==2.10.6
 pydantic_core==2.27.2

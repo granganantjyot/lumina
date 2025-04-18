@@ -4,7 +4,7 @@ import os
 def rotate_processed_image(session_id, image_id, angle):
     if angle == 0: return
 
-    image_path = f"../processed_images/{session_id}/{image_id}.png"
+    image_path = f"../processed_images/{session_id}/{image_id}.jpg"
 
     image = cv2.imread(image_path)
     

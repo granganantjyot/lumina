@@ -68,7 +68,7 @@ async def confirm(request: Request, background_tasks: BackgroundTasks):
         apply_date_metadata(sessionId, image["imageID"], image["date"])
 
         # Delete all uploaded parent images
-        parent_image_path = f"{UPLOAD_FOLDER}/{image["parentImageID"]}.png"
+        parent_image_path = f"{UPLOAD_FOLDER}/{image["parentImageID"]}.jpg"
         if os.path.exists(parent_image_path):
             os.remove(parent_image_path)
 
