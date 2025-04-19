@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { Stage, Layer, Image, Rect, Group, Circle } from "react-konva";
-import ImageFrameEditor from "./ImageFrameEditor";
+import ImageFrameEditor from "./image-frame-editor";
 import { Button } from "./ui/button";
 import { ImagePlus, RotateCcw, X } from "lucide-react";
 import useFrameStore from "@/store/frame-store";
