@@ -3,7 +3,7 @@ import { ImageFrame } from "./photo-crop";
 import { Circle, Line } from "react-konva";
 
 
-const FRAME_COLORS = ["#4cacaf", "#5233b8", "#89c91a", "#c94b4b"]; 
+const FRAME_COLORS = ["#4cacaf", "#5233b8", "#238210", "#c94b4b"]; 
 
 interface ImageFrameEditorType {
     imageFrame: ImageFrame,
@@ -48,7 +48,7 @@ export default function ImageFrameEditor({ imageFrame, frameNumber, onDrag, onDr
                             y={imageFrame[key][1]}
                             radius={7}
                             fill={FRAME_COLORS.at(frameNumber % 4)}
-                            opacity={0.6}
+                            opacity={0.5}
                             dragDistance={1}
                             draggable
                             onDragMove={(event) => handleDragMovement(event, key)}
@@ -69,7 +69,7 @@ export default function ImageFrameEditor({ imageFrame, frameNumber, onDrag, onDr
                 fill={FRAME_COLORS.at(frameNumber % 4)}
                 opacity={0.5}
                 stroke={FRAME_COLORS.at(frameNumber % 4)}
-                strokeWidth={2}
+                strokeWidth={1}
                 closed={true}
                 listening={false}
                 pointerEvents="none"
@@ -78,9 +78,5 @@ export default function ImageFrameEditor({ imageFrame, frameNumber, onDrag, onDr
 
         </>
     )
-
-
-
-
 
 }
