@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Stage, Layer, Image } from "react-konva";
-import ImageFrameEditor from "./ImageFrameEditor";
+import { Stage, Layer, Image, Rect, Group, Circle } from "react-konva";
+import ImageFrameEditor from "./image-frame-editor";
 import { Button } from "./ui/button";
 import { ImagePlus, RotateCcw, X } from "lucide-react";
 import useFrameStore from "@/store/frame-store";
@@ -10,6 +10,7 @@ import { usePreviewStore } from "@/store/preview-store";
 import { useShallow } from 'zustand/react/shallow'
 import LoadingSpinner from "./loading-spinner";
 import { toast } from "@/hooks/use-toast";
+import Konva from "konva";
 
 
 export interface ImageFrame { // contains all 4 corners of the extracted image
@@ -29,6 +30,8 @@ interface PhotoCropComponentType {
 
 
 export default function PhotoCropComponent({ parentImageFile, parentImageID, imageFrames }: PhotoCropComponentType) {
+
+    const stageRef = useRef<Konva.Stage>(null)
 
     const [konvasImage, setKonvasImage] = useState<HTMLImageElement | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -52,6 +55,13 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
     const requestPreviewUpdate = usePreviewStore((state) => state.requestPreviewUpdate) // Request update for preview image via websocket
     const resetPreviews = usePreviewStore((state) => state.resetPreviews)
     const deletePreview = usePreviewStore((state) => state.deletePreview)
+
+
+    // Magnification helper
+    const [magnifierImage, setMagnifierImage] = useState<HTMLImageElement | null>(null);
+    const [magnifierPos, setMagnifierPos] = useState<[number, number] | null>(null);
+    const magnifierSize = 100;
+    const magnification = 2;
 
 
     // Handle initial canvas load
@@ -87,7 +97,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
             setStageScale({ xScale: xScale, yScale: yScale }); // Set local state stage scale
 
 
-            
+
 
 
             const updatedFrames: ImageFrame[] = []
@@ -150,7 +160,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
     function handleAddFrame() {
         // Only allow maximum 4 frames per image
-        if (scaledFrames.length === 4){
+        if (scaledFrames.length === 4) {
             toast({ title: "Maximum 4 Frames Per Image File", variant: "destructive", })
             return;
         }
@@ -268,7 +278,12 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
                 </div>
 
 
-                <Stage width={stageSize.width + 20} height={stageSize.height + 20} className={`mt-5 ${isPreviewLoading ? "pointer-events-none" : ""}`}>
+                <Stage
+                    width={stageSize.width + 20}
+                    height={stageSize.height + 20}
+                    className={`mt-5 ${isPreviewLoading ? "pointer-events-none" : ""}`}
+                    ref={stageRef}
+                >
                     <Layer>
                         {konvasImage && <Image image={konvasImage} width={stageSize.width} height={stageSize.height} />}
 
@@ -279,10 +294,15 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
                                     frameNumber={index}
                                     key={index}
                                     onDrag={(corner: keyof ImageFrame, updatedCornerCoordinate: number[]) => {
+                                        // Update frames
                                         const updatedFrames = [...scaledFrames];
                                         updatedFrames[index] = { ...updatedFrames[index], [corner]: updatedCornerCoordinate } // Update correct frame using index
-
                                         setScaledFrames(updatedFrames)
+
+
+                                        // Update magnification helper
+                                        updateMagnifier(updatedCornerCoordinate[0], updatedCornerCoordinate[1])
+                                        
                                     }}
 
                                     onDragFinished={() => {
@@ -294,11 +314,70 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
                                         // Update the preview images
                                         requestPreviewUpdate(parentImageID, index, { ...scaledFrames[index] }, stageScale)
+
+                                        // Hide magnifier
+                                        setMagnifierImage(null);
+                                        setMagnifierPos(null);
+
                                     }}
 
                                     stageSize={stageSize} />
                             )
                         })}
+
+
+
+                        {/* Display magnifier */}
+                        {magnifierImage && magnifierPos && (
+
+                            <>
+                                <Group
+
+                                    // Clip magnifier into circular shape
+                                    clipFunc={(ctx) => {
+                                        ctx.beginPath();
+                                        ctx.arc(
+                                            magnifierPos[0] + magnifierSize / 2, // center x
+                                            magnifierPos[1] + magnifierSize / 2, // center y
+                                            magnifierSize / 2, // radius
+                                            0,
+                                            Math.PI * 2,
+                                            false
+                                        );
+                                        ctx.closePath();
+                                    }}
+                                >
+                                    {/* Plain white rectangle for background (display instead of transparent background) */}
+                                    <Rect
+                                        x={magnifierPos[0]}
+                                        y={magnifierPos[1]}
+                                        width={magnifierSize}
+                                        height={magnifierSize}
+                                        fill="white"
+                                        strokeWidth={1}
+                                    />
+
+                                    {/* Actual magnified image */}
+                                    <Image
+                                        image={magnifierImage}
+                                        x={magnifierPos[0]}
+                                        y={magnifierPos[1]}
+                                        width={magnifierSize}
+                                        height={magnifierSize}
+                                    />
+                                </Group>
+
+                                {/* Magnifier Outline circular */}
+                                <Circle
+                                    x={magnifierPos[0] + magnifierSize / 2}
+                                    y={magnifierPos[1] + magnifierSize / 2}
+                                    radius={magnifierSize / 2}
+                                    stroke="#0f172a"
+                                    strokeWidth={1}
+                                />
+                            </>
+
+                        )}
 
 
                     </Layer>
@@ -324,16 +403,87 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
                                 <X className="w-3 h-3 text-red-500" />
                             </button>
                         </div>
-                    )) 
-                    : <LoadingSpinner width={10} height={10}/>}
+                    ))
+                        : <LoadingSpinner width={10} height={10} />}
 
                 </div>
             </div>
         </div>
 
-
-
     )
+
+
+    // Update magnifier image, given the dragged position
+    function updateMagnifier(x: number, y: number){
+        if (stageRef.current) {
+            
+            
+            const cropSize = magnifierSize / magnification;
+
+            // Get the magnified image
+            const dataURL = stageRef.current.toDataURL({
+                x: x - cropSize / 2,
+                y: y - cropSize / 2,
+                width: cropSize,
+                height: cropSize,
+                pixelRatio: 4,
+            });
+
+            const img = new window.Image();
+            img.src = dataURL;
+            img.onload = () => setMagnifierImage(img);
+
+            
+            // Update magnifier position
+            const pointerPosition = stageRef.current.getPointerPosition()
+            if (pointerPosition) {
+
+                // If pointer/cursor position ever goes out of bound, limit its bounds
+                if (pointerPosition.x > stageSize.width){
+                    pointerPosition.x = stageSize.width
+                }
+                else if (pointerPosition.x < 0){
+                    pointerPosition.x = 0
+                }
+
+                if (pointerPosition.y > stageSize.height){
+                    pointerPosition.y = stageSize.height
+                }
+                else if (pointerPosition.y < 0){
+                    pointerPosition.y = 0
+                }
+
+                // Magnifier thresholds for positioning
+                const thresholdX = stageSize.width * 0.75;
+                const thresholdY = stageSize.height * 0.75;
+                const minThresholdX = stageSize.width * 0.25;
+                const minThresholdY = stageSize.height * 0.25;
+                const offset = 20; // Extra margin
+              
+                // By default show the magnifier to the left and above the pointer/cursor
+                let newX = pointerPosition.x - magnifierSize - offset;
+                let newY = pointerPosition.y - magnifierSize -  offset; 
+              
+                // If pointer goes beyond 75% of the stage's width, then show magnifer on the left
+                if (pointerPosition.x > thresholdX) {
+                  newX = pointerPosition.x - magnifierSize - offset; 
+                } 
+                // If pointer goes under the 25% stage width threshold, show on right
+                else if (pointerPosition.x < minThresholdX) {
+                  newX = pointerPosition.x + offset; 
+                }
+              
+                // Show above if above 75% of stage height
+                if (pointerPosition.y > thresholdY) {
+                  newY = pointerPosition.y - magnifierSize - offset;
+                } 
+                // Show below if under 25% of stage height
+                else if (pointerPosition.y < minThresholdY) {
+                  newY = pointerPosition.y + offset;
+                }
+              
+                setMagnifierPos([newX, newY]);
+            }
+        }
+    }
 }
-
-
