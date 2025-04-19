@@ -301,7 +301,7 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
 
 
                                         // Update magnification helper
-                                        updateMagnifierPos(updatedCornerCoordinate[0], updatedCornerCoordinate[1])
+                                        updateMagnifier(updatedCornerCoordinate[0], updatedCornerCoordinate[1])
                                         
                                     }}
 
@@ -413,12 +413,14 @@ export default function PhotoCropComponent({ parentImageFile, parentImageID, ima
     )
 
 
-    // Update magnifier's position, given the dragged position
-    function updateMagnifierPos(x: number, y: number){
+    // Update magnifier image, given the dragged position
+    function updateMagnifier(x: number, y: number){
         if (stageRef.current) {
             
-
+            
             const cropSize = magnifierSize / magnification;
+
+            // Get the magnified image
             const dataURL = stageRef.current.toDataURL({
                 x: x - cropSize / 2,
                 y: y - cropSize / 2,
