@@ -13,7 +13,7 @@
   - Using **FSRCNN** deep learning model to upscale image resolution by 2x, minimzing graininess in images
 - 📐 **Auto-Rotation**: Uses a **DLIB face landmark model** to intelligently rotate photos upright if faces are detected sideways or upside down.
 - 🕒 **Custom Timestamp Editing**: Manually set or adjust EXIF date metadata for each detected photo.
-- 📦 **Clean Final Output**: Download enhanced, high-quality images with updated metadata.
+- 📦 **Clean Final Output**: Download enhanced, high-quality images with updated metadata, ready to add in cloud libraries like iCloud Photos, Google Photos, etc.
 
 ---
 
