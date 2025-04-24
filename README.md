@@ -1,6 +1,6 @@
 # 📸 Lumina
 
-**Lumina** is an application designed to help you digitize your physical photos and memories quickly — all without needing an expensive scanner.
+**[Lumina](https://lumina.anantjyotgrang.com)** is an application designed to help you digitize your physical photos and memories quickly — all without needing an expensive scanner.
 
 ---
 
