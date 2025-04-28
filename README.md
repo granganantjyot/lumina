@@ -6,8 +6,8 @@
 
 ## ✨ Features
 
-- 📷 **Batch Photo Detection**: Upload a photo containing several printed photographs — Lumina use computer vision techniques to detect each one automatically. Manual adjustments are available.
-- 🔁 **Perspective Correction**: Warps non-rectangular selections into perfectly rectangular outputs.
+- 📷 **Batch Photo Detection**: Upload a photo containing several printed photographs — Lumina uses computer vision techniques to detect each one automatically. Manual adjustments can be made if needed.
+- 🔁 **Perspective Correction**: Warps non-rectangular selections into perfectly rectangular images.
 - 🧠 **Smart Enhancement**: Improves image quality by:
   - Automatically adjusting brightness, contrast, and sharpness
   - Using **FSRCNN** deep learning model to upscale image resolution by 2x, minimzing graininess in images
@@ -33,6 +33,10 @@
   - **FSRCNN image upscaling**
   - **DLIB-based face landmark detection** for auto-rotation
   - Smart enhancement
+- **Python (Websockets)** – Handles:
+  - Real-time image previews
+ 
+
 
 ### 🚀 Deployment
 - **Frontend**: Vercel  
