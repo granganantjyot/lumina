@@ -7,13 +7,13 @@
 ## ✨ Features
 
 - 📷 **Batch Photo Detection**: Upload a photo containing several printed photographs — Lumina uses computer vision techniques to detect each one automatically. Manual adjustments can be made if needed.
-- 🔁 **Perspective Correction**: Warps non-rectangular selections into perfectly rectangular images.
-- 🧠 **Smart Enhancement**: Improves image quality by:
+- 🔁 **Perspective Correction**: Warps non-rectangular selections into perfectly cropped images.
+- 🧠 **Smart Enhancement**: Improves individual image quality by:
   - Automatically adjusting brightness, contrast, and sharpness
   - Using **FSRCNN** deep learning model to upscale image resolution by 2x, boosting clarity and details
 - 📐 **Auto-Rotation**: Uses a lightweight **DLIB face landmark model** to intelligently rotate photos upright if faces are detected sideways or upside down.
 - 🕒 **Custom Timestamp Editing**: Manually set or adjust EXIF date metadata for each detected photo.
-- 📦 **Clean Final Output**: Download enhanced, high-quality images with updated metadata, ready to add in cloud libraries like iCloud Photos, Google Photos, etc.
+- 📦 **Clean Final Output**: Download enhanced, high-quality images with updated metadata, ready to add in local or cloud libraries like iCloud Photos, Google Photos, etc.
 
 ---
 
