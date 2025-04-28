@@ -10,8 +10,8 @@
 - 🔁 **Perspective Correction**: Warps non-rectangular selections into perfectly rectangular images.
 - 🧠 **Smart Enhancement**: Improves image quality by:
   - Automatically adjusting brightness, contrast, and sharpness
-  - Using **FSRCNN** deep learning model to upscale image resolution by 2x, minimzing graininess in images
-- 📐 **Auto-Rotation**: Uses a **DLIB face landmark model** to intelligently rotate photos upright if faces are detected sideways or upside down.
+  - Using **FSRCNN** deep learning model to upscale image resolution by 2x, boosting clarity and details
+- 📐 **Auto-Rotation**: Uses a lightweight **DLIB face landmark model** to intelligently rotate photos upright if faces are detected sideways or upside down.
 - 🕒 **Custom Timestamp Editing**: Manually set or adjust EXIF date metadata for each detected photo.
 - 📦 **Clean Final Output**: Download enhanced, high-quality images with updated metadata, ready to add in cloud libraries like iCloud Photos, Google Photos, etc.
 
@@ -33,8 +33,8 @@
   - **FSRCNN image upscaling**
   - **DLIB-based face landmark detection** for auto-rotation
   - Smart enhancement
-- **Python (Websockets)** – Handles:
-  - Real-time image previews
+- **Python (Standalone _websockets_ Server)** – Handles:
+  - Real-time image previews during frame adjustments
  
 
 
