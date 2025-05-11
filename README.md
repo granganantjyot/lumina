@@ -64,3 +64,4 @@
 - 🔍 Timestamp detection via OCR
 - ☁️ Optional cloud backup & photo library organization
 - 🤖 AI-based clustering by event, face, or theme
+- Auto glare removal
